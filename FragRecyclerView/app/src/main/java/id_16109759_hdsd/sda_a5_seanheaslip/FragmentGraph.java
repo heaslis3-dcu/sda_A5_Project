@@ -12,19 +12,19 @@ import android.view.ViewGroup;
  * Created by seanh on 05/03/2018.
  */
 
-public class FragmentFav extends Fragment
+public class FragmentGraph extends Fragment
 {
     String TAG = "Assign5";
-    public FragmentFav()
+    public FragmentGraph()
     {
-        Log.d(TAG, "Entering FragmentFav constructor!");
+        Log.d(TAG, "Entering FragmentGraph constructor!");
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fav_fragment, container, false);
+        View view = inflater.inflate(R.layout.graph_fragment, container, false);
         return view;
     }
 }

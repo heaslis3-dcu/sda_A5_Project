@@ -23,40 +23,40 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 {
 
     Context mContext;
-    List<Contact> mData;
+    List<Expenses> mData;
     Dialog myDialog;
 
 
-    public RecyclerViewAdapter(Context mContext, List<Contact> mData) {
+    public RecyclerViewAdapter(Context mContext, List<Expenses> mData) {
         this.mContext = mContext;
         this.mData =mData;
     }
 
-//    public RecyclerViewAdapter(FragmentContact.OnItemSelectedInterface listener)
+//    public RecyclerViewAdapter(FragmentExpenses.OnItemSelectedInterface listener)
 //    {
 //    }
 
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, final int viewType)
     {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_contact, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_expenses, parent, false);
         final viewHolder vHolder = new viewHolder(view);
 
 
         //Dialog ini
         myDialog= new Dialog(mContext);
-        myDialog.setContentView(R.layout.dialog_contact);
+        myDialog.setContentView(R.layout.dialog_clicked_expense);
 
         vHolder.item_contact.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                TextView dialog_title_tv = myDialog.findViewById(R.id.dialog_top_id);
-                TextView dialog_description_tv = myDialog.findViewById(R.id.dialog_bottom_id);
-                ImageView dialog_item_img = myDialog.findViewById(R.id.img_expense);
+                TextView dialog_title_tv = (TextView) myDialog.findViewById(R.id.dialog_expense_type_id);
+                TextView dialog_description_tv = (TextView) myDialog.findViewById(R.id.dialog_expense_description_id);
+                ImageView dialog_item_img = (ImageView) myDialog.findViewById(R.id.dialog_img_expense_id);
                 dialog_title_tv.setText(mData.get(vHolder.getAdapterPosition()).getName());
-                dialog_description_tv.setText(mData.get(vHolder.getAdapterPosition()).getPhone());
+                dialog_description_tv.setText(mData.get(vHolder.getAdapterPosition()).getExpDescription());
                 dialog_item_img.setImageResource(mData.get(vHolder.getAdapterPosition()).getPhoto());
 
                 Toast.makeText(mContext, "Testing Clicked list item" +
@@ -74,7 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(viewHolder holder, int position)
     {
         holder.textView_name.setText(mData.get(position).getName());
-        holder.textView_phone.setText(mData.get(position).getPhone());
+        holder.textView_phone.setText(mData.get(position).getExpDescription());
         holder.img.setImageResource(mData.get(position).getPhoto());
     }
 

@@ -12,6 +12,7 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -19,6 +20,11 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven {
+            //Added per stackoverflow link and subsequently confirmed via:
+            //https://firebase.google.com/docs/android/setup?authuser=1
+            url "https://maven.google.com"
+        }
     }
 }
 

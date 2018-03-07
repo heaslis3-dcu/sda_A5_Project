@@ -12,11 +12,11 @@ import android.view.ViewGroup;
  * Created by seanh on 05/03/2018.
  */
 
-public class FragmentCall extends Fragment
+public class FragmentSubmit extends Fragment
 {
     String TAG = "Assign5";
 
-    public FragmentCall()
+    public FragmentSubmit()
     {
         Log.d(TAG, "Entering Fragment1 Constructor!");
     }
@@ -25,7 +25,7 @@ public class FragmentCall extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.call_fragment, container, false);
+        View view = inflater.inflate(R.layout.submit_fragment, container, false);
         return view;
     }
 }
