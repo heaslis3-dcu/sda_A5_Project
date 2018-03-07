@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_margin="16dp">
+
+    <!-- https://www.youtube.com/watch?v=Zd0TUuoPP-s -->
+    <ImageView
+        android:id="@+id/img_expense"
+        android:layout_width="100dp"
+        android:src="@drawable/ic_directions_bike_black_24dp"
+        android:layout_height="100dp"
+        android:padding="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        />
+
+<LinearLayout
+    android:layout_marginTop="50dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/dialog_descrip_head_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:text="Expense"
+        android:textStyle="bold"
+        android:textSize="24sp"/>
+<!-- Add border around textView
+ https://stackoverflow.com/questions/3496269/
+ how-do-i-put-a-border-around-an-android-textview
+ -->
+    <TextView
+        android:id="@+id/dialog_top_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/contact_id"
+        android:layout_below="@+id/contact_id"
+        android:layout_marginTop="5dp"
+
+        android:minLines="10"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:text="Contact description Top"
+        android:textSize="16sp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/dialog_bottom_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/contact_id"
+        android:layout_below="@+id/contact_id"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:minLines="1"
+        android:text="Text bottom"
+        android:textSize="16sp"/>
+
+    <Button
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Expense"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>
+
+    
+
+</RelativeLayout>
