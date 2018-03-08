@@ -2,6 +2,7 @@ package id_16109759_hdsd.sda_a5_seanheaslip;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,9 +71,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return vHolder;
     }
 
+    //Look into line dividers
+    //https://inducesmile.com/android/how-to-set-recycleview-item-row-background-color-in-android/
+
+    /**
+     * Referecnce for changing row color:
+     * Date: 08/03/2018
+     * https://stackoverflow.com/questions/40603251/
+     * /changing-colors-to-recyclerview-items
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(viewHolder holder, int position)
     {
+        if(position %2 == 1){
+            holder.item_contact.setBackgroundColor(Color.parseColor("#FFEB3B"));
+//            holder.textView_name.setText(mData.get(position).getName());
+//            holder.textView_phone.setText(mData.get(position).getExpDescription());
+//            holder.img.setImageResource(mData.get(position).getPhoto());
+        }
+        else {
+            holder.item_contact.setBackgroundColor(Color.parseColor("#CDDC39"));
+//            holder.textView_name.setText(mData.get(position).getName());
+//            holder.textView_phone.setText(mData.get(position).getExpDescription());
+//            holder.img.setImageResource(mData.get(position).getPhoto());
+        }
         holder.textView_name.setText(mData.get(position).getName());
         holder.textView_phone.setText(mData.get(position).getExpDescription());
         holder.img.setImageResource(mData.get(position).getPhoto());

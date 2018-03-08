@@ -5,7 +5,19 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:layout_margin="16dp">
-
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="@color/colorPrimary">
     <!-- https://www.youtube.com/watch?v=Zd0TUuoPP-s -->
     <ImageView
         android:id="@+id/dialog_img_expense_id"
@@ -16,9 +28,9 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
         />
-
+        </LinearLayout>
 <LinearLayout
-    android:layout_marginTop="50dp"
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -30,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="10dp"
         android:text="Expense"
         android:textStyle="bold"
         android:textSize="24sp"/>
@@ -44,13 +56,25 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/dialog_img_expense_id"
         android:layout_below="@+id/dialog_img_expense_id"
-        android:layout_marginTop="5dp"
 
-        android:minLines="10"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:text="Contact description Top"
+        android:minLines="1"
+        android:padding="8dp"
+
+        android:text="expense name"
+        android:textStyle="bold"
         android:textSize="16sp"
-        android:layout_marginBottom="10dp"/>
+        />
+    <TextView
+        android:id="@+id/dialog_date_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/dialog_expense_type_id"
+        android:minLines="1"
+        android:padding="8dp"
+        android:text="01/01/2020"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        />
 
     <TextView
         android:id="@+id/dialog_expense_description_id"
@@ -61,7 +85,9 @@
         android:layout_marginBottom="10dp"
         android:layout_marginTop="5dp"
         android:minLines="1"
-        android:text="Text bottom"
+        android:padding="8dp"
+        android:background="@color/colorAccent"
+        android:text="body text"
         android:textSize="16sp"/>
 
     <Button
@@ -71,7 +97,7 @@
         android:text="Update Expense"
         android:layout_marginTop="10dp"/>
 </LinearLayout>
-
-
+        </LinearLayout>
+</ScrollView>
 
 </RelativeLayout>
