@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-<Button
-    android:id="@+id/test_google_signout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="Logout (Test)"/>
-</LinearLayout>
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="?attr/actionBarSize"
+    tools:context="id_16109759_hdsd.sda_a5_seanheaslip.MainActivity">
+    <!--android:orientation="vertical"-->
+
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Test Chart"/>-->
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/idPieChart"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"></com.github.mikephil.charting.charts.PieChart>
+
+</RelativeLayout>

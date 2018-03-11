@@ -12,21 +12,33 @@ public class Expenses
     private String ExpenseType;
     private String ExpDescription;
     private String Date;
+    private double ExpAmount;
     private int Photo;
 
     public Expenses(){
 
     }
 
-    public Expenses(String name, String expenseType, String expDescription, String date, int photo)
+
+
+    public Expenses(String name, String expenseType, double expAmount, String expDescription, String date, int photo)
     {
         Name = name;
         ExpenseType = expenseType;
+        ExpAmount = expAmount;
         ExpDescription = expDescription;
         Date = date;
         Photo = photo;
     }
+    public double getExpAmount()
+    {
+        return ExpAmount;
+    }
 
+    public void setExpAmount(double expAmount)
+    {
+        ExpAmount = expAmount;
+    }
     public String getDate() {
         return Date;
     }

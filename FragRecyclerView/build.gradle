@@ -12,7 +12,7 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-        classpath 'com.google.gms:google-services:3.1.0'
+        classpath 'com.google.gms:google-services:3.2.0'
     }
 }
 
@@ -20,14 +20,28 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
         maven {
             //Added per stackoverflow link and subsequently confirmed via:
             //https://firebase.google.com/docs/android/setup?authuser=1
             url "https://maven.google.com"
+
         }
+
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+/**
+ * MPAndroidChart
+ * Ref: https://github.com/PhilJay/MPAndroidChart/blob/master/README.md
+ * Date 11/03/2018
+ */
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
 }
