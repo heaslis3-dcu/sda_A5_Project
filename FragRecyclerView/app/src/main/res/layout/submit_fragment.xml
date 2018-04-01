@@ -32,12 +32,12 @@
             android:layout_below="@+id/camera_img"
             android:text="Take Picture"
             android:textSize="16sp"
+            android:textStyle="bold"
             android:paddingBottom="8dp"
             android:paddingLeft="8dp"
-            android:layout_centerHorizontal="true"
-            />
+            android:layout_centerHorizontal="true"/>
 
-        <TextView
+        <EditText
             android:id="@+id/calendar_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,68 +45,95 @@
             android:layout_below="@+id/camera_txt"
             android:background="@drawable/border"
             android:focusable="false"
-            android:hint="Click to select date "
+            android:hint="Select date "
+
+            android:textSize="16sp"
             android:paddingBottom="8dp"
             android:paddingStart="8dp"
-            android:paddingTop="16dp"/>
-        <Button
-            android:id="@+id/calendar_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingTop="16dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:background="@drawable/ic_date_range_black_24dp"
-            android:layout_below="@+id/camera_txt"
-            android:layout_toStartOf="@+id/amount_text"
-            android:layout_toEndOf="@id/calendar_text"/>
+            android:paddingTop="8dp"/>
+        <!--android:imeOptions="actionDone"-->
+        <!--<Button-->
+            <!--android:id="@+id/calendar_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingBottom="8dp"-->
+            <!--android:paddingTop="16dp"-->
+            <!--android:paddingStart="8dp"-->
+            <!--android:paddingEnd="8dp"-->
+            <!--android:background="@drawable/ic_date_range_black_24dp"-->
+            <!--android:layout_below="@+id/camera_txt"-->
+            <!--android:layout_toStartOf="@+id/amount_text"-->
+            <!--android:layout_toEndOf="@id/calendar_text"/>-->
         <EditText
             android:id="@+id/amount_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/expense_spinner"
+            android:layout_above="@+id/spinDesc"
             android:layout_alignParentEnd="true"
             android:background="@drawable/border"
             android:cursorVisible="true"
             android:textCursorDrawable="@color/divider"
             android:hint="Enter Amount"
-            android:inputType="number"
+            android:inputType="numberDecimal"
+            android:textSize="16sp"
             android:paddingBottom="8dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:paddingTop="16dp"/>
+            android:paddingTop="8dp"/>
+        <!--
+        android:imeOptions="actionNext"
+        <requestFocus />-->
+        <TextView
+            android:id="@+id/spinDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense Type"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:layout_below="@+id/calendar_text"/>
         <Spinner
             android:id="@+id/expense_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/calendar_text"
+            android:layout_below="@+id/spinDesc"
+            android:layout_alignParentStart="true"
+
+            android:background="@drawable/border"
             android:paddingBottom="8dp"
-            android:paddingTop="16dp"/>
+            android:paddingTop="8dp"/>
         <!--
         Reference: To include Counter Text Appearance:
         https://stackoverflow.com/questions/3013791/live-character-count-for-edittext
         Date: 31/03/2018
         -->
+        <TextView
+            android:id="@+id/expDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense Description"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:layout_below="@+id/expense_spinner"/>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_edtx1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:counterEnabled="true"
             app:counterMaxLength="200"
-            android:layout_below="@+id/expense_spinner">
+            android:layout_below="@+id/expDesc">
 
             <EditText
                 android:id="@+id/text_edtx"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
+
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
                 android:gravity="top"
                 android:cursorVisible="true"
                 android:textCursorDrawable="@color/divider"
-                android:hint="Expense Description"
+
                 android:inputType="textMultiLine"
                 android:maxLength="200"
                 android:lines="5"
@@ -123,6 +150,17 @@
             android:text="Submit"
             android:layout_below="@+id/text_edtx1"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/border"/>
+
+        <Button
+            android:id="@+id/clear_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Clear"
+            android:layout_below="@+id/submit_btn"
+            android:layout_centerHorizontal="true"
+
             android:background="@drawable/border"/>
 
     </RelativeLayout>

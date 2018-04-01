@@ -10,16 +10,16 @@ Date: 31/03/2018
     android:width="1dp"
     android:color="@color/divider" />
 <solid
-    android:color="#00FFFFFF"
-    android:paddingLeft="10dp"
-    android:paddingTop="10dp"
-    />
+    android:color="#FFFFFF"
+    android:paddingLeft="10dp"/>
+    <!--android:paddingTop="10dp"-->
+
     <corners
         android:radius="5dp">
     </corners>
 <padding
     android:left="10dp"
-    android:top="10dp"
+
     android:right="10dp"
     android:bottom="10dp" />
 </shape>

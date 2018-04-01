@@ -1,25 +1,26 @@
 package id_16109759_hdsd.sda_a5_seanheaslip;
 
-import android.widget.Spinner;
+import android.net.Uri;
 
 /**
- * Created by seanh on 06/03/2018.
+ * Created by seanh on 01/04/2018.
  */
 
-public class Expenses
+public class Expense
 {
     private String Name;
     private String ExpenseType;
     private String ExpDescription;
     private String Date;
     private double ExpAmount;
-    private int Photo;
+    private String Photo;
+//    private Uri Photo;
 
-    public Expenses(){
+    public Expense(){
 
     }
-
-    public Expenses(String name, String expenseType, double expAmount, String expDescription, String date, int photo)
+//    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, Uri photo)
+    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, String photo)
     {
         Name = name;
         ExpenseType = expenseType;
@@ -74,13 +75,23 @@ public class Expenses
         ExpDescription = expDescription;
     }
 
-    public int getPhoto()
+    public String getPhoto()
     {
         return Photo;
     }
 
-    public void setPhoto(int photo)
+    public void setPhoto(String photo)
     {
         Photo = photo;
     }
+
+//    public Uri getPhoto()
+//    {
+//        return Photo;
+//    }
+//
+//    public void setPhoto(Uri photo)
+//    {
+//        Photo = photo;
+//    }
 }

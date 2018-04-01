@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
 
+
 //    // FirebaseAuth.AuthStateListener mAuthListenera;
 //    GoogleSignInClient mGoogleSignInClient;
 //    FirebaseAuth.AuthStateListener mAuthListenera;
