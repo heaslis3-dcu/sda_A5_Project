@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Reference: adding a border xml file
+https://stackoverflow.com/questions/35762006/
+how-to-have-edittext-with-border-in-android-lollipop
+Date: 31/03/2018
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<stroke
+    android:width="1dp"
+    android:color="@color/divider" />
+<solid
+    android:color="#00FFFFFF"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    />
+    <corners
+        android:radius="5dp">
+    </corners>
+<padding
+    android:left="10dp"
+    android:top="10dp"
+    android:right="10dp"
+    android:bottom="10dp" />
+</shape>

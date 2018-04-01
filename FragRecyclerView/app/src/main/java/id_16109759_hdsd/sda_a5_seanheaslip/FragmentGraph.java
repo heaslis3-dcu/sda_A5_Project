@@ -58,18 +58,19 @@ public class FragmentGraph extends Fragment
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.graph_fragment, container, false);
-
+        //Hide Keyboard if visible
+        Keyboard.hideSoftKeyBoardOnTabClicked(getContext());
         Log.d(TAG, "onCreate: starting to create chart");
         pieChart = (PieChart) view.findViewById(R.id.idPieChart);
 
-        pieChart.setDescription("Expense breakdown YTD (€) ");
+       pieChart.setDescription(" ");
         pieChart.setRotationEnabled(true);
         //pieChart.setUsePercentValues(true);
         //pieChart.setHoleColor(Color.BLUE);
         //pieChart.setCenterTextColor(Color.BLACK);
         pieChart.setHoleRadius(50f);
         pieChart.setTransparentCircleAlpha(0);
-        pieChart.setCenterText("Expenses");
+        pieChart.setCenterText("Expense breakdown YTD (€)");
         pieChart.setCenterTextSize(16);
 
         //pieChart.setDrawEntryLabels(true);

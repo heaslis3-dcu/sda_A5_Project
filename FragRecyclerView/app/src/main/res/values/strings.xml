@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">SDA_A5_SeanHeaslip</string>
+
+    <string-array name="spinner_expensetype">
+        <item>-- Select Expense Type --</item>
+        <item>Accomodation</item>
+        <item>Flights</item>
+        <item>Meals</item>
+        <item>Other</item>
+        <item>Transport</item>
+    </string-array>
+    <string name="title_activity_calendar_layout">calendar_layout</string>
 </resources>

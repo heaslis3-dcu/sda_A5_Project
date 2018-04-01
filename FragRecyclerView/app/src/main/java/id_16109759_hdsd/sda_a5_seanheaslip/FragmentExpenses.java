@@ -52,6 +52,9 @@ public class FragmentExpenses extends Fragment
 //        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.contact_recyclerview);
 //        RecyclerViewAdapter listAdapter = new RecyclerViewAdapter(listener);
 
+        //Hide Keyboard if visible
+        Keyboard.hideSoftKeyBoardOnTabClicked(getContext());
+
         myRecyclerView = (RecyclerView) view.findViewById(R.id.expenses_recyclerview);
         RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), listExpenses);
         myRecyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
