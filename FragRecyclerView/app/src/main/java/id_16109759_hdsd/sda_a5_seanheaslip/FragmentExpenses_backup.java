@@ -60,7 +60,7 @@ public class FragmentExpenses_backup extends Fragment
         Keyboard.hideSoftKeyBoardOnTabClicked(getContext());
 
         myRecyclerView = (RecyclerView) view.findViewById(R.id.expenses_recyclerview);
-        RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), listExpenses);
+        RecyclerViewAdapter_backup recyclerAdapter = new RecyclerViewAdapter_backup(getContext(), listExpenses);
         myRecyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
         myRecyclerView.setAdapter(recyclerAdapter);
 

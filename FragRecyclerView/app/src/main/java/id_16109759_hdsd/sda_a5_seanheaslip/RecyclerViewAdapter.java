@@ -17,6 +17,7 @@ package id_16109759_hdsd.sda_a5_seanheaslip;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -38,11 +41,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 {
 
    private Context mContext;
-    private List<Expenses> mData;
+    private List<Expense> mData;
     private Dialog myDialog;
 
 
-    public RecyclerViewAdapter(Context mContext, List<Expenses> mData) {
+    public RecyclerViewAdapter(Context mContext, List<Expense> mData) {
         this.mContext = mContext;
         this.mData =mData;
     }
@@ -74,7 +77,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 dialog_description_tv.setText(mData.get(vHolder.getAdapterPosition()).getExpDescription());
 
                 //use picasso API
-                dialog_item_img.setImageResource(mData.get(vHolder.getAdapterPosition()).getPhoto());
+                Picasso.with(mContext)
+                        .load(mData.get(vHolder.getAdapterPosition()).getPhoto())
+                        .fit()
+                        .centerCrop()
+                        .rotate(90)
+                        .into(dialog_item_img);
+               // dialog_item_img.setImageResource(mData.get(vHolder.getAdapterPosition()).getPhoto());
                // dialog_item_img.setImageResource();
 
                 Toast.makeText(mContext, "Testing Clicked list item" +
@@ -102,26 +111,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(viewHolder holder, int position)
     {
-        Expenses expenseCurrent = mData.get(position);
+        Expense expenseCurrent = mData.get(position);
         holder.textView_expType.setText(expenseCurrent.getExpenseType());
         holder.textView_description.setText(expenseCurrent.getExpDescription());
         holder.textView_date.setText(expenseCurrent.getDate());
-        holder.img.setImageResource(expenseCurrent.getPhoto());
-//        if(position %2 == 1){
-//            holder.item_contact.setBackgroundColor(Color.parseColor("#FFEB3B"));
-////            holder.textView_name.setText(mData.get(position).getName());
-////            holder.textView_description.setText(mData.get(position).getExpDescription());
-////            holder.img.setImageResource(mData.get(position).getPhoto());
-//        }
-//        else {
-//            holder.item_contact.setBackgroundColor(Color.parseColor("#CDDC39"));
-////            holder.textView_name.setText(mData.get(position).getName());
-////            holder.textView_description.setText(mData.get(position).getExpDescription());
-////            holder.img.setImageResource(mData.get(position).getPhoto());
-//        }
-//        holder.textView_name.setText(mData.get(position).getName());
-//        holder.textView_description.setText(mData.get(position).getExpDescription());
-//        holder.img.setImageResource(mData.getPhoto());
+
+       // holder.img.setImageResource(expenseCurrent.getPhoto());
+        // Using Picasso to handle image
+        Picasso.with(mContext)
+                .load(expenseCurrent.getPhoto())
+                .placeholder(R.mipmap.ic_launcher)
+                .fit()
+                .centerCrop()
+                .rotate(90)
+                .into(holder.img);
+
+        //Change color of Even and Odd rows
+        if(position %2 == 1){
+            holder.item_contact.setBackgroundColor(Color.parseColor("#FFEB3B"));
+        }
+        else {
+            holder.item_contact.setBackgroundColor(Color.parseColor("#CDDC39"));
+        }
+
     }
 
     @Override

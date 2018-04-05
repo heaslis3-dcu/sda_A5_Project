@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,22 +33,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
-
-import id.zelory.compressor.Compressor;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -91,6 +80,8 @@ public class FragmentSubmit extends Fragment
     private String m_ImageLocation;
     private String mtimeStamp;
     private byte[] mbitmapdata;
+
+    private StorageTask mUploadTask; // used to check if there is an upload currently running
     Intent mediaScanIntent;
     String mImgFilename;
 
@@ -101,7 +92,7 @@ public class FragmentSubmit extends Fragment
      */
     //Firebase Data
     private String userID;
-    private DatabaseReference firebaseDatabase; // Storage for Data
+    private DatabaseReference mDatabaseRef; // Storage for Data
     private FirebaseAuth firebaseAuth; // Login Authentication
     //Firebase Images
     FirebaseStorage firebaseStorage;
@@ -129,7 +120,7 @@ public class FragmentSubmit extends Fragment
        // firebaseStorage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("images/users/"); //mStorageRef
         //Firebase database References
-        firebaseDatabase = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users"); // mDatabaseRef
         //firebaseStorage = FirebaseStorage.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -163,8 +154,18 @@ public class FragmentSubmit extends Fragment
         mSubmitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage();
-                Toast.makeText(getActivity(),"Image loaded" + m_ImageUri, Toast.LENGTH_SHORT).show();
+                //check if an upload is currently running,
+                // Check if not null - to aovid crash
+                if(mUploadTask != null && mUploadTask.isInProgress()) {
+                    // if an upload in progress we want to avoid uploading file
+                    Toast.makeText(getActivity(),"Upload in progress!", Toast.LENGTH_SHORT).show();
+                } else {
+                    //If no upload in progress - upload file
+                    uploadImage();
+                    Toast.makeText(getActivity(),"Image loaded" + m_ImageUri, Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -284,24 +285,8 @@ public class FragmentSubmit extends Fragment
                 && data != null && data.getData() != null )
         {
             filePath = data.getData();
-           // mPhoto = null;
-            //Uri
-//            filePath = data.getData();
-//                if(filePath != null) {
-//                    mPhoto = BitmapFactory.decodeFile(filePath.getPath());
-//                }
-//                if(mPhoto == null) {
-//                    Bundle extra = data.getExtras();
-//
-//                    if(extra != null) {
-//                        mPhoto = (Bitmap) extra.get("data");
-//                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                        mPhoto.compress(Bitmap.CompressFormat.JPEG,100,stream);
-//                        try(
-//
-//                                )
-//                    }
-//                }
+
+        //This portion of code assigns the compressed Bitmap to the ImageView
             try {
 
                 //Adding compression: - Discovered @ 01:37am on 5th April 2018 - filepath above is being used
@@ -312,7 +297,7 @@ public class FragmentSubmit extends Fragment
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                 ByteArrayOutputStream blob = new ByteArrayOutputStream();
                 //byte[] bytes = getBytesFromBitmap(bitmap, 100);
-                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,blob);
+                 bitmap.compress(Bitmap.CompressFormat.JPEG,0,blob);
                  byte[] bitmapdata = blob.toByteArray();
                  Bitmap mBitMap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
                // return bytes;
@@ -374,6 +359,7 @@ public class FragmentSubmit extends Fragment
 private void ReturnByteImg(byte[] byteMB) {
 
 }
+//Compress bitmap
 public byte[] ReturnByteImage(){
      byte[] mBitMapByte = new byte[1];
         try
@@ -384,6 +370,8 @@ public byte[] ReturnByteImage(){
             //byte[] bytes = getBytesFromBitmap(bitmap, 100);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 0, blob);
             mBitMapByte = blob.toByteArray();
+            //Bitmap mBitMap = BitmapFactory.decodeByteArray(mBitMapByte, 0, mBitMapByte.length);
+            //mCamera.setImageBitmap(mBitMap);
             // Bitmap mBitMap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
             // return bytes;
             //Save bitmap to ImageView
@@ -413,7 +401,7 @@ public byte[] ReturnByteImage(){
 
 
 
-            ref.putBytes(ReturnByteImage())    //uploads compressed byte file
+            mUploadTask = ref.putBytes(ReturnByteImage())    //uploads compressed byte file
            // ref.putFile(filePath)    //upload full file uncompressed
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -443,14 +431,14 @@ public byte[] ReturnByteImage(){
                                 Toast.makeText(getActivity(), "No Image ", Toast.LENGTH_SHORT).show();
                             }else{
                                 //generate Unique ID from Firebase
-                                String id = firebaseDatabase.push().getKey();
+                                String id = mDatabaseRef.child(userID + "/" + UUID.randomUUID().toString()).push().getKey();
                                 //Users Email - unique therefore adding as an
                                 userID = firebaseAuth.getCurrentUser().getEmail();
 
                                 // Updating expense Class
                                 Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
                                 //Pass Expense with id to the Database to avoid overwriting data in Database
-                                firebaseDatabase.child(id).setValue(expense);
+                                mDatabaseRef.child(id).setValue(expense);
                                // Toast.makeText(getActivity(), "Image Uri. " + m_ImageUri, Toast.LENGTH_LONG).show();
                                 // Toast.makeText(getActivity(), "Image File Path." + mImageFilePath, Toast.LENGTH_LONG).show();
                             }
@@ -610,13 +598,13 @@ public byte[] ReturnByteImage(){
         }else{
 
             //generate Unique ID from Firebase
-           String id = firebaseDatabase.push().getKey();
+           String id = mDatabaseRef.push().getKey();
            //Users Email - unique therefore adding as an
            userID = firebaseAuth.getCurrentUser().getEmail();
             // Updating expense Class
            Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
             //Pass Expense with id to the Database to avoid overwriting data in Database
-            firebaseDatabase.child(id).setValue(expense);
+            mDatabaseRef.child(id).setValue(expense);
             Toast.makeText(getActivity(), "Image Uri." + m_ImageUri, Toast.LENGTH_LONG).show();
            // Toast.makeText(getActivity(), "Image File Path." + mImageFilePath, Toast.LENGTH_LONG).show();
         }
