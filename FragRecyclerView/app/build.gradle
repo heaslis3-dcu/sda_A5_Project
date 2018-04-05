@@ -56,4 +56,26 @@ dependencies {
 dependencies {
     implementation 'com.google.firebase:firebase-database:11.8.0'
 }
+//
+/**
+ * Squareup Picasso - for loading images from Firebase
+ * Reference:
+ * http://square.github.io/picasso/
+ * https://github.com/square/picasso
+ * Date: 04/04/2018
+ *
+ */
+dependencies {
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+}
+
+/*
+ *Compressor API - Compresses Images
+ * Reference: https://github.com/zetbaitsu/Compressor
+ * Date 04/04/2018
+ */
+dependencies {
+    compile 'id.zelory:compressor:2.1.0'
+}
 apply plugin: 'com.google.gms.google-services'
+

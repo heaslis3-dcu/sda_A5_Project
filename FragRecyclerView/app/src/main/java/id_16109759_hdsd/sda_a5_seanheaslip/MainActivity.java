@@ -1,12 +1,16 @@
 package id_16109759_hdsd.sda_a5_seanheaslip;
 
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.TabLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,8 +25,8 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
-
-
+    String TAG = "Assign5";
+    private static final int REQUEST_CODE = 1;
 //    // FirebaseAuth.AuthStateListener mAuthListenera;
 //    GoogleSignInClient mGoogleSignInClient;
 //    FirebaseAuth.AuthStateListener mAuthListenera;
@@ -72,7 +76,47 @@ public class MainActivity extends AppCompatActivity
 //                mAuth.signOut();
 //            }
 //        });
+        verifyPermissions();
     }
+
+
+    /**
+     * Added permissions verification
+     * Code modified from reference:
+     * https://github.com/mitchtabian/ForSale/blob/
+     * b610ebb8e1927851fccf35e65a8f2529f9a4f83d/app/
+     * src/main/java/codingwithmitch/com/forsale/SearchActivity.java
+     * Date: 05/04/2018
+     */
+    private void verifyPermissions(){
+        Log.d(TAG, "verifyPermissions: asking user for permissions");
+    String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            android.Manifest.permission.INTERNET,
+            android.Manifest.permission.CAMERA};
+
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
+    permissions[0]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+    permissions[1]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+    permissions[2]) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[3]) == PackageManager.PERMISSION_GRANTED){
+    //setupViewPager();
+}else{
+    ActivityCompat.requestPermissions(MainActivity.this,
+            permissions,
+            REQUEST_CODE);
+}
+}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        verifyPermissions();
+    }
+
+
 
 //    public void signOut() {
 //        mGoogleSignInClient.signOut()

@@ -20,7 +20,7 @@ import java.util.List;
  * Created by seanh on 05/03/2018.
  */
 
-public class FragmentExpenses extends Fragment
+public class FragmentExpenses_backup extends Fragment
 {
     //private
     private DatabaseReference firebaseDatabase;
@@ -28,7 +28,7 @@ public class FragmentExpenses extends Fragment
     private List<Expenses> listExpenses;
 
     String TAG = "Assign5";
-    public FragmentExpenses()
+    public FragmentExpenses_backup()
     {
         Log.d(TAG, "Entering FragmentExpenses Constructor!");
     }

@@ -12,13 +12,13 @@ import java.util.List;
  * For handling movement between Fragmentss
  */
 
-public class ViewPagerAdapter extends FragmentPagerAdapter
+public class ViewPagerAdapter_backup extends FragmentPagerAdapter
 {
     private final List<Fragment> listFragment = new ArrayList<>();
     private final List<String> listTitles = new ArrayList<>();
 
 
-    public ViewPagerAdapter(FragmentManager fm)
+    public ViewPagerAdapter_backup(FragmentManager fm)
     {
         super(fm);
     }

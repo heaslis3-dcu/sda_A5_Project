@@ -8,39 +8,55 @@ import android.net.Uri;
 
 public class Expense
 {
-    private String Name;
+    private String Id;
+    private String Email;
     private String ExpenseType;
     private String ExpDescription;
     private String Date;
-    private double ExpAmount;
+   // private double ExpAmount;
+    private String ExpAmount;
     private String Photo;
 //    private Uri Photo;
 
     public Expense(){
 
     }
-//    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, Uri photo)
-    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, String photo)
+
+
+
+    //    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, Uri photo)
+    public Expense(String id, String email, String expenseType, String expAmount, String expDescription, String date, String photo)
     {
-        Name = name;
+        Id = id;
+        Email = email;
         ExpenseType = expenseType;
         ExpAmount = expAmount;
         ExpDescription = expDescription;
         Date = date;
         Photo = photo;
     }
-    public double getExpAmount()
+    // id - this will be the value retrieved from Firebase
+    public String getId()
     {
-        return ExpAmount;
+        return Id;
     }
 
-    public void setExpAmount(double expAmount)
+    public void setId(String id)
     {
-        ExpAmount = expAmount;
+        Id = id;
     }
-    public String getDate() {
-        return Date;
+    //Name this will be the user Name obtained at Login
+    public String getName()
+    {
+        return Email;
     }
+
+    public void setName(String email)
+    {
+        Email = email;
+    }
+
+    // Expense type retrieved from Spinner
     public String getExpenseType()
     {
         return ExpenseType;
@@ -51,19 +67,27 @@ public class Expense
         ExpenseType = expenseType;
     }
 
+    // Amount Saved as String - this is because when using a Map or ArrayList linked to Firebase we declare the type
+    // ie.e Map <String, String> map.....
+    public String getExpAmount()
+    {
+        return ExpAmount;
+    }
+
+    public void setExpAmount(String expAmount)
+    {
+        ExpAmount = expAmount;
+    }
+    public String getDate() {
+        return Date;
+    }
+
+
     public void setDate(String date) {
         Date =date;
     }
 
-    public String getName()
-    {
-        return Name;
-    }
 
-    public void setName(String name)
-    {
-        Name = name;
-    }
 
     public String getExpDescription()
     {
