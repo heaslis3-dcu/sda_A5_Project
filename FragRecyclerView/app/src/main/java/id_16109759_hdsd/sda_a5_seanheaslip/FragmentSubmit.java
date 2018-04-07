@@ -80,7 +80,7 @@ public class FragmentSubmit extends Fragment
     private String m_ImageLocation;
     private String mtimeStamp;
     private byte[] mbitmapdata;
-
+    private String idExtention;
     private StorageTask mUploadTask; // used to check if there is an upload currently running
     Intent mediaScanIntent;
     String mImgFilename;
@@ -99,7 +99,6 @@ public class FragmentSubmit extends Fragment
     StorageReference storageReference; // Storage for Images
 
 
-
     String date;
     Calendar myCalendar = Calendar.getInstance();
 
@@ -107,7 +106,8 @@ public class FragmentSubmit extends Fragment
     {
         Log.d(TAG, "Entering Fragment1 Constructor!");
     }
-//https://stackoverflow.com/questions/27225815/android-how-to-show-datepicker-in-fragment
+
+    //https://stackoverflow.com/questions/27225815/android-how-to-show-datepicker-in-fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -117,10 +117,10 @@ public class FragmentSubmit extends Fragment
         Keyboard.hideSoftKeyBoardOnTabClicked(getContext());
 
         //Firebase Images
-       // firebaseStorage = FirebaseStorage.getInstance();
+        // firebaseStorage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("images/users/"); //mStorageRef
         //Firebase database References
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users"); // mDatabaseRef
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/"); // mDatabaseRef
         //firebaseStorage = FirebaseStorage.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -129,7 +129,7 @@ public class FragmentSubmit extends Fragment
         */
 
         //User ID
-       // userID = firebaseAuth.getCurrentUser().getEmail();
+        // userID = firebaseAuth.getCurrentUser().getEmail();
         //Get Signed in User
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userID = user.getUid();
@@ -144,55 +144,102 @@ public class FragmentSubmit extends Fragment
         mCamera = (ImageButton) view.findViewById(R.id.camera_img);
         //mStorageRef = FirebaseStorage.getInstance().getReference("expenses");
         mSubmitBtn = (Button) view.findViewById(R.id.submit_btn);
+        // How to Automatically add thousand separators as number is input in EditText
+        // For Reference: See Downloaded Class NumberTextWatcherForThousand
+        //Text Water for
+        mAmount.addTextChangedListener(new NumberTextWatcherForThousand(mAmount));
 
-        mCamera.setOnClickListener(new View.OnClickListener() {
+        mCamera.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+
                 chooseImage();
             }
         });
-        mSubmitBtn.setOnClickListener(new View.OnClickListener() {
+        mSubmitBtn.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onClick(View v) {
-                //check if an upload is currently running,
-                // Check if not null - to aovid crash
-                if(mUploadTask != null && mUploadTask.isInProgress()) {
-                    // if an upload in progress we want to avoid uploading file
-                    Toast.makeText(getActivity(),"Upload in progress!", Toast.LENGTH_SHORT).show();
-                } else {
-                    //If no upload in progress - upload file
-                    uploadImage();
-                    Toast.makeText(getActivity(),"Image loaded" + m_ImageUri, Toast.LENGTH_SHORT).show();
+            public void onClick(View v)
+            {
+                //Load information to Database retrieve key from image uploaded:
+                String expDate = mDate.getText().toString().trim(); //Date as String
+                String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
+                //double expAmount = Double.parseDouble(mAmount.getText().toString());
+                String expType = mSpinner.getSelectedItem().toString(); // Expense
+                String expDesc = mDescription.getText().toString().trim(); //Description Saved
+
+
+                // String imageUri = taskSnapshot.getDownloadUrl().toString(); //ID of uploaded image
+                if (filePath == null)
+                {
+                    Toast.makeText(getActivity(), "Image missing!", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(expDate))
+                {
+                    Toast.makeText(getActivity(), "Date required ", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(expAmount))
+                {
+                    Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
+                } else if (expType == mSpinner.getItemAtPosition(0))
+                {
+                    Toast.makeText(getActivity(), "Select expense type!", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(expDesc))
+                {
+                    Toast.makeText(getActivity(), "Expense description required", Toast.LENGTH_SHORT).show();
+                } else
+                {
+                    //check if an upload is currently running,
+                    // Check if not null - to aovid crash
+                    if (mUploadTask != null && mUploadTask.isInProgress())
+                    {
+                        // if an upload in progress we want to avoid uploading file
+                        Toast.makeText(getActivity(), "Upload in progress!", Toast.LENGTH_SHORT).show();
+                    } else
+                    {
+                        //If no upload in progress - upload file
+                        uploadImage();
+                        //Toast.makeText(getActivity(), "Please attach an Image!", Toast.LENGTH_SHORT).show();
+                    }
+//                (mUploadTask.isComplete())
+//                    //String cameraImg = "@drawable/ic_photo_camera_black_24dp";
+//                    mDate.setText("");
+//                    // mAmount.setText("");
+//                    mDescription.setText("");
+//                    mSpinner.setSelection(origSpinnerPos);
+//                    // mCamera.setImageURI(null);
+//                    ImageButton imageButton = (ImageButton) v.findViewById(R.id.camera_img);
+//                    // imageButton.setImageResource(R.drawable.ic_photo_camera_black_24dp); //change imagebutton
                 }
-
-
             }
         });
 
-        //mCamera - Click
-//        mCamera.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//                //captureImage();
-//            }
-//        });
 
 
-
+/**
+ * With Reference to changing ImageButton when Clear Button is clicked:
+ * Issue persists and crashes application so have removed this from my
+ * Clear button method
+ * Reference: https://stackoverflow.com/questions/12249495/
+ * android-imagebutton-change-image-onclick
+ * Date: 05/04/2018
+ */
         //Clear fields button - RESET Form
         mClearBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                String cameraImg = "@drawable/ic_photo_camera_black_24dp";
+
+                //String cameraImg = "@drawable/ic_photo_camera_black_24dp";
                 mDate.setText("");
                 mAmount.setText("");
                 mDescription.setText("");
                 mSpinner.setSelection(origSpinnerPos);
-                mCamera.setImageURI(null);
+                // mCamera.setImageURI(null);
+                //ImageButton imageButton = (ImageButton) v.findViewById(R.id.camera_img);
+                mCamera.setImageResource(R.drawable.ic_photo_camera_black_24dp); //change imagebutton
+
 
             }
         });
@@ -239,7 +286,7 @@ public class FragmentSubmit extends Fragment
         //Spinner:
         Spinner spinner = (Spinner) view.findViewById(R.id.expense_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
-        R.array.spinner_expensetype, android.R.layout.simple_spinner_item);
+                R.array.spinner_expensetype, android.R.layout.simple_spinner_item);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -247,6 +294,7 @@ public class FragmentSubmit extends Fragment
 
         return view;
     }
+
 //  Start of New Approach to handle Image
 
     /**
@@ -255,7 +303,8 @@ public class FragmentSubmit extends Fragment
      * https://code.tutsplus.com/tutorials/image-upload-to-firebase-in-android-application--cms-29934
      * Date: 02/04/2018
      */
-    private void chooseImage() {
+    private void chooseImage()
+    {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -270,46 +319,42 @@ public class FragmentSubmit extends Fragment
      * Code modified using below reference for Bitmap - within Try/Catch block
      * https://stackoverflow.com/questions/7620401/how-to-convert-byte-array-to-bitmap
      * // below link referenced when testing Bitmap to byte filetype - using putByte(byte)
-     *  to upload to Firebase
+     * to upload to Firebase
      * https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
      * Date: 04/04/2018
+     *
      * @param requestCode
      * @param resultCode
      * @param data
      */
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_SHARE && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
+        if (requestCode == REQUEST_SHARE && resultCode == RESULT_OK
+                && data != null && data.getData() != null)
         {
             filePath = data.getData();
 
-        //This portion of code assigns the compressed Bitmap to the ImageView
-            try {
+            //This portion of code assigns the compressed Bitmap to the ImageView
+            try
+            {
 
                 //Adding compression: - Discovered @ 01:37am on 5th April 2018 - filepath above is being used
                 // To populate the image toFirebase and not the compressed Bitmap below.
-                //byte[] bytes = null;
                 //May need to replace this with Picasso.with(this).load(filepath).into(mCamera);
-               // filePath = data.getData();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
                 ByteArrayOutputStream blob = new ByteArrayOutputStream();
-                //byte[] bytes = getBytesFromBitmap(bitmap, 100);
-                 bitmap.compress(Bitmap.CompressFormat.JPEG,0,blob);
-                 byte[] bitmapdata = blob.toByteArray();
-                 Bitmap mBitMap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
-               // return bytes;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 0, blob);
+                byte[] bitmapdata = blob.toByteArray();
+                Bitmap mBitMap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+                // return bytes;
+                //rotate inmage in imageView
                 //Save bitmap to ImageView
                 mCamera.setImageBitmap(mBitMap);
 
-                //Bitmap compressedImage
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
-//                mCamera.setImageBitmap(bitmap.compress(Bitmap.CompressFormat.JPEG, 80, ));
-            }
-            catch (IOException e)
+            } catch (IOException e)
             {
                 e.printStackTrace();
             }
@@ -317,67 +362,23 @@ public class FragmentSubmit extends Fragment
         }
     }
 
-
-//    /**
-//     * Use for decoding camera response data.
-//     *
-//     * @param data
-//     * @return
-//     */
-//    public static Bitmap getBitmapFromData(Intent data) {
-//        Bitmap photo = null;
-//        Uri photoUri = data.getData();
-//        if (photoUri != null) {
-//            photo = BitmapFactory.decodeFile(photoUri.getPath());
-//        }
-//        if (photo == null) {
-//            Bundle extra = data.getExtras();
-//            if (extra != null) {
-//                photo = (Bitmap) extra.get("data");
-//                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-//                photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-//            }
-//        }
-//
-//        return photo;
-//    }
-
-//
-//  //Compress file
-//    public File getBitmapFromPath(Uri filePath) {
-//        File imageFile = new File(filePath);
-//        OutputStream fout = new FileOutputStream(imageFile);
-//        Bitmap bitmap= BitmapFactory.decodeFile(filePath);
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fout);
-//        fout.flush();
-//        fout.close();
-//
-//        return imageFile;
-//    }
-
     //Compress Bitmap
-private void ReturnByteImg(byte[] byteMB) {
+    private void ReturnByteImg(byte[] byteMB)
+    {
 
-}
-//Compress bitmap
-public byte[] ReturnByteImage(){
-     byte[] mBitMapByte = new byte[1];
+    }
+
+    //Compress bitmap
+    public byte[] ReturnByteImage()
+    {
+        byte[] mBitMapByte = new byte[1];
         try
         {
             //Compression
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
             ByteArrayOutputStream blob = new ByteArrayOutputStream();
-            //byte[] bytes = getBytesFromBitmap(bitmap, 100);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 0, blob);
             mBitMapByte = blob.toByteArray();
-            //Bitmap mBitMap = BitmapFactory.decodeByteArray(mBitMapByte, 0, mBitMapByte.length);
-            //mCamera.setImageBitmap(mBitMap);
-            // Bitmap mBitMap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
-            // return bytes;
-            //Save bitmap to ImageView
-            // mCamera.setImageBitmap(mBitMap);
-            // mCamera.buildDrawingCache();
-            // Bitmap mbitmap = mCamera.getDrawingCache();
 
         } catch (IOException e)
         {
@@ -385,81 +386,80 @@ public byte[] ReturnByteImage(){
         }
         return mBitMapByte;
     }
+
     private void uploadImage()
     {
 
-        if(filePath != null)
+        if (filePath != null)
         {
+            //Popup Progress Dialog
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
+            idExtention = userID + "/" + UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child(idExtention);
 
-            StorageReference ref = storageReference.child( userID + "/" + UUID.randomUUID().toString());
-           // Bitmap compressedImageBitmap = new Compressor().compressToBitmap(filePath);
-            //ref.putBytes();
-
-
+            //Testing - storage filepath similar to database filepath
+            Log.d(TAG, "Storage filepath: " + ref);
 
 
             mUploadTask = ref.putBytes(ReturnByteImage())    //uploads compressed byte file
-           // ref.putFile(filePath)    //upload full file uncompressed
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    // ref.putFile(filePath)    //upload full file uncompressed
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>()
+                    {
                         @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(getActivity(), "Uploaded", Toast.LENGTH_SHORT).show();
-
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                        {
                             //Load information to Database retrieve key from image uploaded:
                             String expDate = mDate.getText().toString().trim(); //Date as String
                             String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
-                            // Double expAmount = Double.parseDouble(mAmount.getText().toString());
                             String expDesc = mDescription.getText().toString().trim(); //Description Saved
                             String expType = mSpinner.getSelectedItem().toString();
 
-                            String imageUri = taskSnapshot.getDownloadUrl().toString(); //ID of uploaded image
-                            //  Uri imageUri = m_ImageUri;
+                            //ID of uploaded image
+                            String imageUri = taskSnapshot.getDownloadUrl().toString();
 
-                            if(TextUtils.isEmpty(expDate)) {
-                                Toast.makeText(getActivity(), "Date required ", Toast.LENGTH_SHORT).show();
-                            } else if(expAmount == null) {
-                                Toast.makeText(getActivity(), "Amount required ", Toast.LENGTH_SHORT).show();
-                            }else if(TextUtils.isEmpty(expDesc)) {
-                                Toast.makeText(getActivity(), "Expense description required ", Toast.LENGTH_SHORT).show();
-                            } else if(TextUtils.isEmpty(expType)) {
-                                Toast.makeText(getActivity(), "Select expense type ", Toast.LENGTH_SHORT).show();
-                            } else if(Uri.EMPTY.equals(imageUri)) {
-                                Toast.makeText(getActivity(), "No Image ", Toast.LENGTH_SHORT).show();
-                            }else{
-                                //generate Unique ID from Firebase
-                                String id = mDatabaseRef.child(userID + "/" + UUID.randomUUID().toString()).push().getKey();
-                                //Users Email - unique therefore adding as an
-                                userID = firebaseAuth.getCurrentUser().getEmail();
+                            //generate Unique ID from Firebase
+                            String id = idExtention;
 
-                                // Updating expense Class
-                                Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
-                                //Pass Expense with id to the Database to avoid overwriting data in Database
-                                mDatabaseRef.child(id).setValue(expense);
-                               // Toast.makeText(getActivity(), "Image Uri. " + m_ImageUri, Toast.LENGTH_LONG).show();
-                                // Toast.makeText(getActivity(), "Image File Path." + mImageFilePath, Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+                            //Users Email - unique therefore adding as an
+                            userID = firebaseAuth.getCurrentUser().getEmail();
+
+                            // Updating expense Class
+                            Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
+                            //Pass Expense with id to the Database to avoid overwriting data in Database
+                            mDatabaseRef.child(id).setValue(expense);
+                            // Testing Database filepath similar to Storage Filepath
+                            Log.d(TAG, "Database path: " + mDatabaseRef);
+
+                            //Remove Progress Dialog popup
                             progressDialog.dismiss();
-                            Toast.makeText(getActivity(), "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Data uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    .addOnFailureListener(new OnFailureListener()
+                    {
                         @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            progressDialog.dismiss();
+                            Toast.makeText(getActivity(), "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>()
+                    {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
+                        {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
                                     .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                            progressDialog.setMessage("Uploading data: " + (int) progress + "%");
                         }
                     });
         }
+//        else {
+//            Toast.makeText(getActivity(), "No Image attached!", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     /**
@@ -468,13 +468,15 @@ public byte[] ReturnByteImage(){
      * 7ce6d2dfa7e481f028a68de1d69c5499dca81c80/app/src/main/
      * java/codingwithmitch/com/forsale/PostFragment.java
      * Date: 04/04/2018
+     *
      * @param bitmap
      * @param quality
      * @return
      */
-    public static byte[] getBytesFromBitmap(Bitmap bitmap, int quality){
+    public static byte[] getBytesFromBitmap(Bitmap bitmap, int quality)
+    {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, stream);
         return stream.toByteArray();
     }
 
@@ -571,42 +573,48 @@ public byte[] ReturnByteImage(){
 //
 //}
 
-//  Working addExpense code
-    private void addExpense() {
+    //  Working addExpense code
+    private void addExpense()
+    {
 //        EditText mDate;
 //        EditText mAmount;
 //        EditText mDescription;
 //        Spinner mSpinner;
         String expDate = mDate.getText().toString().trim();
         String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
-       // Double expAmount = Double.parseDouble(mAmount.getText().toString());
+        // double expAmount = Double.parseDouble(mAmount.getText().toString());
         String expDesc = mDescription.getText().toString().trim();
         String expType = mSpinner.getSelectedItem().toString();
-       String imageUri = m_ImageUri.toString().trim();
-     //  Uri imageUri = m_ImageUri;
+        String imageUri = m_ImageUri.toString().trim();
+        //  Uri imageUri = m_ImageUri;
 
-        if(TextUtils.isEmpty(expDate)) {
+        if (TextUtils.isEmpty(expDate))
+        {
             Toast.makeText(getActivity(), "Date required", Toast.LENGTH_SHORT).show();
-        } else if(expAmount == null) {
-            Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
-        }else if(TextUtils.isEmpty(expDesc)) {
+//        } else if(expAmount == null) {
+//            Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
+        } else if (TextUtils.isEmpty(expDesc))
+        {
             Toast.makeText(getActivity(), "Expense description required", Toast.LENGTH_SHORT).show();
-        } else if(TextUtils.isEmpty(expType)) {
+        } else if (TextUtils.isEmpty(expType))
+        {
             Toast.makeText(getActivity(), "Select expense type", Toast.LENGTH_SHORT).show();
-        } else if(Uri.EMPTY.equals(imageUri)) {
+        } else if (Uri.EMPTY.equals(imageUri))
+        {
             Toast.makeText(getActivity(), "No Image", Toast.LENGTH_SHORT).show();
-        }else{
+        } else
+        {
 
             //generate Unique ID from Firebase
-           String id = mDatabaseRef.push().getKey();
-           //Users Email - unique therefore adding as an
-           userID = firebaseAuth.getCurrentUser().getEmail();
+            String id = mDatabaseRef.push().getKey();
+            //Users Email - unique therefore adding as an
+            userID = firebaseAuth.getCurrentUser().getEmail();
             // Updating expense Class
-           Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
+            Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
             //Pass Expense with id to the Database to avoid overwriting data in Database
             mDatabaseRef.child(id).setValue(expense);
             Toast.makeText(getActivity(), "Image Uri." + m_ImageUri, Toast.LENGTH_LONG).show();
-           // Toast.makeText(getActivity(), "Image File Path." + mImageFilePath, Toast.LENGTH_LONG).show();
+            // Toast.makeText(getActivity(), "Image File Path." + mImageFilePath, Toast.LENGTH_LONG).show();
         }
     }
 }

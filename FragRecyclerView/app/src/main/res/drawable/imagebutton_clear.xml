@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--Reference:
+        https://stackoverflow.com/questions/4193167/
+        change-source-image-for-image-view-when-pressed
+        Date: 05/04/2018
+
+        Come back to this if sufficient time
+        Look into replacing ImageButton when Clear button is pressed to
+         Change image back to original Camera icon, otherwise insert an ImageView.
+    -->
+    <!--<item android:state_activated="true">-->
+        <!--<bitmap android:src="@drawable/image_selected"/>-->
+    <!--</item>-->
+    <!--<item>-->
+        <!--<bitmap android:src="@drawable/image_not_selected"/>-->
+    <!--</item>-->
+</selector>

@@ -6,6 +6,14 @@
     <color name="colorPrimary">#c0ff8c</color>
     <color name="colorPrimaryDark">#c0ff8c</color>
     <color name="colorAccent">#DCEDC8</color>
+    <!-- Background Colors
+    Complimentary colors from:
+    Reference: http://www.color-hex.com/color/dcedc8
+    Date: 05/04/2018
+    -->
+    <color name="colorBackgroundSubmit">#b7e7b5</color>
+    <color name="colorBackgroundExpense">#caedc8</color>
+    <color name="colorBackgroundGraph">#edecc8</color>
     <!--<color name="accent">#E040FB</color>-->
     <color name="accent">#689F38</color>
     <color name="primary_text">#212121</color>

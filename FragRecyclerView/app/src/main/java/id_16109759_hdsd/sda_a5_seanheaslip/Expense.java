@@ -11,9 +11,10 @@ public class Expense
     private String Id;
     private String Email;
     private String ExpenseType;
+   // private double ExpenseTdouble;
     private String ExpDescription;
     private String Date;
-   // private double ExpAmount;
+    //private double ExpAmount;
     private String ExpAmount;
     private String Photo;
 //    private Uri Photo;
@@ -66,7 +67,19 @@ public class Expense
     {
         ExpenseType = expenseType;
     }
+//    // Expense type retrieved from Spinner
+//    @Override
+//    public double getExpenseType()
+//    {
+//        return ExpenseTdouble;
+//    }
 
+
+//    @Override
+//    public void setExpenseType(double expenseType)
+//    {
+//        ExpenseType = ExpenseTdouble;
+//    }
     // Amount Saved as String - this is because when using a Map or ArrayList linked to Firebase we declare the type
     // ie.e Map <String, String> map.....
     public String getExpAmount()

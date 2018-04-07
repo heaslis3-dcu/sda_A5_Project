@@ -15,13 +15,16 @@ package id_16109759_hdsd.sda_a5_seanheaslip;
  limitations under the License.
  */
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +32,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.text.Format;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,7 +62,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, final int viewType)
     {
+      //  Activity activity;
+
+        //Retrieve display dimensions
+        //Rect displayRectangle = new Rect();
+       //Window window = mContext.getWindow();
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_expenses, parent, false);
+       // view.setMinimumWidth((int)(displayRectangle.width() * 0.9f));
         final viewHolder vHolder = new viewHolder(view);
 
 
@@ -70,13 +81,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View view)
             {
-                TextView dialog_title_tv = (TextView) myDialog.findViewById(R.id.dialog_expense_type_id);
+                //initialised Views from dialog_descrip_heading_id
+                //Expense Type
+                TextView dialog_title_tv = (TextView) myDialog.findViewById(R.id.dialog_descrip_heading_id);
+                // Expense Description
                 TextView dialog_description_tv = (TextView) myDialog.findViewById(R.id.dialog_expense_description_id);
+                // id
+                TextView dialog_id = (TextView) myDialog.findViewById(R.id.dialog_expense_type_id );
+                // Expense Date
+                TextView dialog_date_tv = (TextView) myDialog.findViewById(R.id.dialog_date_id);
+                // Image
                 ImageView dialog_item_img = (ImageView) myDialog.findViewById(R.id.dialog_img_expense_id);
-                dialog_title_tv.setText(mData.get(vHolder.getAdapterPosition()).getName());
+
+                //Expense Type
+                dialog_title_tv.setText("Expense: " + mData.get(vHolder.getAdapterPosition()).getExpenseType()); // Expense Type
+                //ID
+                dialog_id.setText("Email: " + mData.get(vHolder.getAdapterPosition()).getName());
+                //Date
+                dialog_date_tv.setText("Date: " + mData.get(vHolder.getAdapterPosition()).getDate());
+                //Description
                 dialog_description_tv.setText(mData.get(vHolder.getAdapterPosition()).getExpDescription());
 
-                //use picasso API
+                // Image - use picasso API
                 Picasso.with(mContext)
                         .load(mData.get(vHolder.getAdapterPosition()).getPhoto())
                         .fit()
@@ -115,6 +141,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.textView_expType.setText(expenseCurrent.getExpenseType());
         holder.textView_description.setText(expenseCurrent.getExpDescription());
         holder.textView_date.setText(expenseCurrent.getDate());
+        holder.textView_Amount.setText("€ " + expenseCurrent.getExpAmount());
 
        // holder.img.setImageResource(expenseCurrent.getPhoto());
         // Using Picasso to handle image
@@ -147,6 +174,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public TextView textView_expType;
         public TextView textView_description;
         public TextView textView_date;
+        public TextView textView_Amount;
         public ImageView img;
 
         public viewHolder(View itemView)
@@ -156,6 +184,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textView_expType = (TextView) itemView.findViewById(R.id.expense_type); //
             textView_description = (TextView) itemView.findViewById(R.id.expense_description); // description
             textView_date = (TextView) itemView.findViewById(R.id.date_id); //date
+            textView_Amount = (TextView) itemView.findViewById(R.id.amount_id); //date
             img = (ImageView) itemView.findViewById(R.id.img_contact); //image
 
         }

@@ -9,8 +9,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="?attr/actionBarSize"
-    android:background="@color/colorAccent"
-    >
+    android:background="@color/colorBackgroundSubmit">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,6 +22,7 @@
         android:layout_height="100dp"
         android:src="@drawable/ic_photo_camera_black_24dp"
         android:background="@color/border"
+        android:rotation="90"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:scaleType="centerInside"/>
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/camera_img"
-            android:text="Take Picture"
+            android:text="Select Image"
             android:textSize="16sp"
             android:textStyle="bold"
             android:paddingBottom="8dp"
@@ -151,7 +151,7 @@
             android:padding="8dp"
             android:text="Submit"
             android:layout_below="@+id/text_edtx1"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/border"/>
 
         <Button
@@ -160,9 +160,10 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="Clear"
-            android:layout_below="@+id/submit_btn"
-            android:layout_centerHorizontal="true"
 
+            android:layout_below="@+id/text_edtx1"
+            
+            android:layout_alignParentLeft="true"
             android:background="@drawable/border"/>
 
     </RelativeLayout>

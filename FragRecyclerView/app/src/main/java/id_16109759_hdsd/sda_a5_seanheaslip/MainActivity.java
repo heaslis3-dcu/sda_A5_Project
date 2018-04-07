@@ -11,6 +11,8 @@ import android.support.design.widget.TabLayout;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -27,8 +29,8 @@ public class MainActivity extends AppCompatActivity
     private ViewPagerAdapter adapter;
     String TAG = "Assign5";
     private static final int REQUEST_CODE = 1;
-//    // FirebaseAuth.AuthStateListener mAuthListenera;
-//    GoogleSignInClient mGoogleSignInClient;
+    FirebaseAuth.AuthStateListener mAuthListenera;
+    GoogleSignInClient mGoogleSignInClient;
 //    FirebaseAuth.AuthStateListener mAuthListenera;
 //    FirebaseAuth mAuth;
 //
@@ -45,16 +47,16 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-      //  toolbar = (Toolbar) findViewById(R.id.toolbar_id);
-       // setSupportActionBar(toolbar);
+        //  toolbar = (Toolbar) findViewById(R.id.toolbar_id);
+        // setSupportActionBar(toolbar);
         tabLayout = (TabLayout) findViewById(R.id.tablayout_id);
         viewPager = (ViewPager) findViewById(R.id.viewpager_id);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         //Add Fragment Here
-        adapter.AddFragment(new FragmentSubmit(),"Submit");
-        adapter.AddFragment(new FragmentExpenses(),"Expenses");
-        adapter.AddFragment(new FragmentGraph(),"Graph");
+        adapter.AddFragment(new FragmentSubmit(), "Submit");
+        adapter.AddFragment(new FragmentExpenses(), "Expenses");
+        adapter.AddFragment(new FragmentGraph(), "Graph");
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
 
@@ -79,6 +81,37 @@ public class MainActivity extends AppCompatActivity
         verifyPermissions();
     }
 
+    /**
+     * Menu item
+     *
+     * @param menu
+     * @return
+     */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /**
+     * Log out of application when the Menu Item is selected
+     *
+     * @param item
+     * @return
+     */
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_send:
+                signOut();
+                return true;
+        }
+        return false;
+    }
 
     /**
      * Added permissions verification
@@ -88,43 +121,49 @@ public class MainActivity extends AppCompatActivity
      * src/main/java/codingwithmitch/com/forsale/SearchActivity.java
      * Date: 05/04/2018
      */
-    private void verifyPermissions(){
+    private void verifyPermissions()
+    {
         Log.d(TAG, "verifyPermissions: asking user for permissions");
-    String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            android.Manifest.permission.INTERNET,
-            android.Manifest.permission.CAMERA};
+        String[] permissions = {android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.INTERNET,
+                android.Manifest.permission.CAMERA};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-    permissions[0]) == PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                permissions[0]) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-    permissions[1]) == PackageManager.PERMISSION_GRANTED
+                permissions[1]) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-    permissions[2]) == PackageManager.PERMISSION_GRANTED
+                permissions[2]) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                permissions[3]) == PackageManager.PERMISSION_GRANTED){
-    //setupViewPager();
-}else{
-    ActivityCompat.requestPermissions(MainActivity.this,
-            permissions,
-            REQUEST_CODE);
-}
-}
+                permissions[3]) == PackageManager.PERMISSION_GRANTED)
+        {
+            //setupViewPager();
+        } else
+        {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    permissions,
+                    REQUEST_CODE);
+        }
+    }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
         verifyPermissions();
     }
 
 
-
-//    public void signOut() {
-//        mGoogleSignInClient.signOut()
-//                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        // ...
-//                    }
-//                });
-//    }
+    public void signOut()
+    {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>()
+                {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task)
+                    {
+                        // ...
+                    }
+                });
+    }
 }

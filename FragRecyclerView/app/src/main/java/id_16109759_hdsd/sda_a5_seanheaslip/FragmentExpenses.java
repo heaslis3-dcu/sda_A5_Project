@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,10 +33,13 @@ public class FragmentExpenses extends Fragment
     private RecyclerView mRecyclerView;
     private RecyclerViewAdapter mAdapter;
 
-    private DatabaseReference mDatabaseRef;
+    private DatabaseReference mDatabaseRef; //mDatabaseRef
     private List<Expense> mExpense;
+    private String userID; //userID
+    private FirebaseAuth mAuth; //firebaseAuth
 
     String TAG = "Assign5";
+
     public FragmentExpenses()
     {
         Log.d(TAG, "Entering FragmentExpenses Constructor!");
@@ -49,15 +54,17 @@ public class FragmentExpenses extends Fragment
      */
     //Adding interface to access full screen view of list item
     //Per
-    public interface OnItemSelectedInterface {
+    public interface OnItemSelectedInterface
+    {
         void onListItemSelected(int index);
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState)
     {
 
-      //  OnItemSelectedInterface listener = (OnItemSelectedInterface) getActivity();
+        //  OnItemSelectedInterface listener = (OnItemSelectedInterface) getActivity();
 
         View view = inflater.inflate(R.layout.expense_fragment_recycler, container, false);
 //        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.contact_recyclerview);
@@ -65,10 +72,13 @@ public class FragmentExpenses extends Fragment
 
         //Hide Keyboard if visible
         Keyboard.hideSoftKeyBoardOnTabClicked(getContext());
-
+        //Moving to OnCreate
+//            mAuth = FirebaseAuth.getInstance();
+//            FirebaseUser user = mAuth.getCurrentUser();
+//        userID = user.getUid();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.expenses_recyclerview);
         mRecyclerView.setHasFixedSize(true); // increases performance
-      //  RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), mExpense);
+        //  RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), mExpense);
         mRecyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
         //mRecyclerView.setAdapter(recyclerAdapter);
 
@@ -85,6 +95,7 @@ public class FragmentExpenses extends Fragment
      * firebase-storage-upload-and-retrieve-images/part-6
      * Date: 05/04/2018
      * Hardcoded arrayList<> contains the data
+     *
      * @param savedInstanceState
      */
 
@@ -94,23 +105,36 @@ public class FragmentExpenses extends Fragment
         super.onCreate(savedInstanceState);
         // Note - if time consider adding a loading/progress element
 
+        //Moved authentication to OnCreate - as it was returning NULL when entered in OnCreateView
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        userID = user.getUid();
         mExpense = new ArrayList<>();
 //  This shows ALL Database references loaded during testing - replacing with Specific User location
 //        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
 
-        //Adding User specific database location:
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users"); // mDatabaseRef
+        //Adding User specific database location - "expenses/users/...userID/
+        //This will permit users to ONLY view their data.
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/" + userID + "/"); // mDatabaseRef
+        Log.d(TAG, "Check mDatabaseRed ExpFrag: " + mDatabaseRef);
         mDatabaseRef.addValueEventListener(new ValueEventListener()
         {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                for(DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                //Clears ArrayList prior to adding new image
+                //Issue with temporary duplication of previously loaded data resolved.
+                mExpense.clear();
+                //showData(dataSnapshot);
+
+                // Working when all items in Expense are String
+                // Updating due to double in Expense Class
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren())
+                {
                     Expense expense = postSnapshot.getValue(Expense.class);
                     mExpense.add(expense);
                 }
-
-                mAdapter = new RecyclerViewAdapter(getContext(),mExpense);
+                mAdapter = new RecyclerViewAdapter(getContext(), mExpense);
                 mRecyclerView.setAdapter(mAdapter);
             }
 
@@ -144,6 +168,7 @@ public class FragmentExpenses extends Fragment
 //        mExpense.add(new Expenses("Sean Heaslip","Travel",255,"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", "01/12/2017", R.drawable.ic_android_black_24dp));
 
 
-
     }
+
+
 }

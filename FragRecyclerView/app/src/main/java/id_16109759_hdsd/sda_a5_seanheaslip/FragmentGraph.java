@@ -3,6 +3,8 @@ package id_16109759_hdsd.sda_a5_seanheaslip;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +20,15 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by seanh on 05/03/2018.
@@ -34,13 +43,19 @@ public class FragmentGraph extends Fragment
      * PieChartTutorial/app/src/main/java/com/example/user/piecharttutorial/MainActivity.java
      * Date: 11/03/2018
      */
-
+//    String str = "20.05";
+//    float fl = Float.parseFloat(str.toString());
     private float[] yData = {200.5f, 150.99f, 35.5f, 28.02f, 129.58f, 86.78f, 65.50f, 98.99f};
     private String[] xData = {"Flights", "Accomodation", "Beverages", "Food", "Client",
             "Other", "Ground Transport", "Entertainment"};
     PieChart pieChart;
     String TAG = "Assign5";
+    //private
+    private RecyclerView mRecyclerView;
+    private RecyclerViewAdapter mAdapter;
 
+    private DatabaseReference mDatabaseRef;
+    private List<Expense> mExpense;
 
     //private RecyclerView myRecyclerView;
     //   private List<Expenses> listExpenses;
@@ -77,6 +92,12 @@ public class FragmentGraph extends Fragment
         //pieChart.setEntryLabelTextSize(20);
         //More options just check out the documentation!
 
+        //Firebase related RecyclerView
+//        mRecyclerView = (RecyclerView) view.findViewById(R.id.expenses_recyclerview);
+//        mRecyclerView.setHasFixedSize(true); // increases performance
+//        //  RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), mExpense);
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
+//        //mRecyclerView.setAdapter(recyclerAdapter);
         addDataSet();
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener()
@@ -150,8 +171,54 @@ public class FragmentGraph extends Fragment
         pieChart.invalidate();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        // Note - if time consider adding a loading/progress element
+
+        mExpense = new ArrayList<>();
+//  This shows ALL Database references loaded during testing - replacing with Specific User location
+//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
+
+        //Adding User specific database location:
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/"); // mDatabaseRef
+        mDatabaseRef.addValueEventListener(new ValueEventListener()
+        {
+            /**
+             * Map modified from example in Fragment Expenses,
+             * And using below, in addition to some trial and error testing
+             * Reference - https://stackoverflow.com/questions/37688031/
+             * class-java-util-map-has-generic-type-parameters-please-use-generictypeindicator
+             * @param dataSnapshot
+             */
+           //@Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                // Get Data from Database for Expense type and Amount
+                // returning Name and Amount in Log testing :D
+
+                for(DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                {
+                    Map<String, String> map = (Map) postSnapshot.getValue();
+
+                    String amount = map.get("expAmount");
+                    String type = map.get("expenseType");
+                    Log.d(TAG, "Expense Name: " + type);
+                    Log.d(TAG, "Expense Amount: " + amount);
+                }
+            }
 
 
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
 /*
     private void setupPieChart()
     {
