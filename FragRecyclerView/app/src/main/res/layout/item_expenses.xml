@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:paddingLeft="8dp"
             android:textStyle="bold"
-            android:text="test top"
+            android:text="Expense Type"
             android:textSize="16sp"/>
 
         <TextView
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingLeft="8dp"
-            android:text="test bottom"
+            android:text="Expense Description"
             android:textSize="16sp"
             android:maxLines="1"/>
     </LinearLayout>
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:textStyle="bold"
-            android:text="04/12/2018"
+            android:text="MM/DD/YYYY"
             android:textSize="16sp"/>
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
 
-            android:text="Star"
+            android:text="Amount"
             android:textSize="16sp"
             android:maxLines="1"/>
 

@@ -67,7 +67,9 @@ public class FragmentSubmit extends Fragment
     private Button mSubmitBtn;
     private EditText mDate;
     private EditText mAmount;
+    // public static EditText mPlaceholder; //placeholder for m Amount to allow formatting
     private EditText mDescription;
+    //For Formatted value
     private Spinner mSpinner;
     private ImageButton mCamera;
     private int origSpinnerPos = 0;
@@ -154,15 +156,19 @@ public class FragmentSubmit extends Fragment
 //        ToggleButton toggleButton = (ToggleButton)view.findViewById(R.id.clear_btn);
 //        toggleButton.setChecked(false);
 
-        //Testing double
-       // mAmount.addTextChangedListener(new NumberTextWatcherForThousand(mAmount));
+        //Testing Formatt
+        // mPlaceholder = mAmount;
+
+        // FORMAT to Number in EditText - left out as ran out of time to resolve issue with
+        // handling comma feeding into database
+        // This works but unfortunately does not feed through to database
+        // mAmount.addTextChangedListener(new NumberTextWatcherForThousand(mAmount));
 
         mCamera.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-
                 chooseImage();
             }
         });
@@ -180,7 +186,7 @@ public class FragmentSubmit extends Fragment
                 String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
                 //double expAmount = Double.parseDouble(mAmount.getText().toString());
 
-               // float expAmount = Float.parseFloat(mAmount.getText().toString());
+                // float expAmount = Float.parseFloat(mAmount.getText().toString());
                 String expType = mSpinner.getSelectedItem().toString(); // Expense
                 String expDesc = mDescription.getText().toString().trim(); //Description Saved
 
@@ -204,11 +210,9 @@ public class FragmentSubmit extends Fragment
                 {
                     mAmount.setError("Amount required"); //Should place icon in EditText and display message
                     //Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
-                }
-
-                else if (expType == mSpinner.getItemAtPosition(origSpinnerPos))
+                } else if (expType == mSpinner.getItemAtPosition(origSpinnerPos))
                 {
-                   Toast.makeText(getActivity(), "Select expense type!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Select expense type!", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(expDesc))
                 {
                     mDescription.setError("A description is required!"); //Should place icon in EditText and display message
@@ -227,6 +231,7 @@ public class FragmentSubmit extends Fragment
                         uploadImage();
                         //Toast.makeText(getActivity(), "Please attach an Image!", Toast.LENGTH_SHORT).show();
                     }
+
 //                (mUploadTask.isComplete())
 //                    //String cameraImg = "@drawable/ic_photo_camera_black_24dp";
 //                    mDate.setText("");
@@ -239,9 +244,6 @@ public class FragmentSubmit extends Fragment
                 }
             }
         });
-
-
-
 
 
 /**
@@ -258,17 +260,9 @@ public class FragmentSubmit extends Fragment
             @Override
             public void onClick(View v)
             {
-
-                //String cameraImg = "@drawable/ic_photo_camera_black_24dp";
-                mDate.setText("");
-              mAmount.setText("");
-                mDescription.setText("");
-                mSpinner.setSelection(origSpinnerPos);
-                // mCamera.setImageURI(null);
-                //ImageButton imageButton = (ImageButton) v.findViewById(R.id.camera_img);
-                mCamera.setImageResource(R.drawable.ic_photo_camera_black_24dp); //change imagebutton
-
-
+                // Self created method to Clear contents from Form,
+                // Also used when data is loaded to Firebase after Submit button pressed.
+                clearContent();
             }
         });
 
@@ -324,6 +318,18 @@ public class FragmentSubmit extends Fragment
     }
 
 //  Start of New Approach to handle Image
+
+    //Clear Test
+    public void clearContent()
+    {
+        mDate.setText("");
+        mAmount.setText("");
+        mDescription.setText("");
+        mSpinner.setSelection(origSpinnerPos);
+        // mCamera.setImageURI(null);
+        //ImageButton imageButton = (ImageButton) v.findViewById(R.id.camera_img);
+        mCamera.setImageResource(R.drawable.ic_photo_camera_black_24dp); //change imagebutton
+    }
 
     /**
      * Referene:
@@ -441,7 +447,7 @@ public class FragmentSubmit extends Fragment
                             //Load information to Database retrieve key from image uploaded:
                             String expDate = mDate.getText().toString().trim(); //Date as String
                             //double expAmount = Double.parseDouble(mAmount.getText().toString()); // Save amount as String due to structure of Data in Firebase
-                           // String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
+                            // String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
                             //float
                             float expAmount = Float.parseFloat(mAmount.getText().toString());
 
@@ -467,6 +473,9 @@ public class FragmentSubmit extends Fragment
                             //Remove Progress Dialog popup
                             progressDialog.dismiss();
                             Toast.makeText(getActivity(), "Data uploaded", Toast.LENGTH_SHORT).show();
+
+                            // Clear contents from Submit Form after data loaded to Firebase.
+                            clearContent();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener()
@@ -489,6 +498,7 @@ public class FragmentSubmit extends Fragment
                         }
                     });
         }
+
 //        else {
 //            Toast.makeText(getActivity(), "No Image attached!", Toast.LENGTH_SHORT).show();
 //        }

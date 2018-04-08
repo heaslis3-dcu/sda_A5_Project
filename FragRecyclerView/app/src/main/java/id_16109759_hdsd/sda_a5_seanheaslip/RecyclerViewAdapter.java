@@ -155,10 +155,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         //Change color of Even and Odd rows
         if(position %2 == 1){
-            holder.item_contact.setBackgroundColor(Color.parseColor("#FFEB3B"));
+            holder.item_contact.setBackgroundColor(Color.parseColor("#c8edeb"));
         }
         else {
-            holder.item_contact.setBackgroundColor(Color.parseColor("#CDDC39"));
+            holder.item_contact.setBackgroundColor(Color.parseColor("#c8d8ed"));
         }
 
     }

@@ -22,9 +22,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
-
+        <!--Reference to adjustment of Submit Tab - Descriptiion EditText field
+                        "the contents of the window are automatically panned so that the
+                        current focus is never obscured by the keyboard and users can always see what they are typing."
+                        https://developer.android.com/guide/topics/manifest/activity-element.html#wsoft
+                        -->
+        <activity android:name=".MainActivity"
+                  android:windowSoftInputMode="adjustPan">
         </activity>
+
         <activity
             android:name=".CalendarLayout"
             android:label="@string/title_activity_calendar_layout"

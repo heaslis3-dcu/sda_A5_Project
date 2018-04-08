@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -30,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,9 +58,11 @@ public class FragmentGraph extends Fragment
 //  https://stackoverflow.com/questions/4837568/java-convert-arraylistfloat-to-float
 
     private float[] floatArray;
+    private float[] newFloatArray;
  //   private float[] yData = {200.5f, 150.99f, 35.5f, 28.02f, 129.58f, 86.78f, 65.50f, 98.99f, 300f};
 
     private String[] stringArray;
+    private String[] newStringArray;
 //    private String[] xData = {"Flights", "Accomodation", "Beverages", "Food", "Client",
 //            "Other", "Ground Transport", "Entertainment", "Taxi"};
     PieChart pieChart;
@@ -79,6 +83,11 @@ public class FragmentGraph extends Fragment
     private String userID; //userID
     private FirebaseAuth mAuth; //firebaseAuth
 
+    private float sumAccomodation;
+    private float sumFlights;
+    private float sumMeals;
+    private float sumOther;
+    private float sumTransport;
     //Array lists
 //    private List<String[]> expenseType = new ArrayList<String[]>();
 //    private List<String[]> expenseAmount = new ArrayList<String[]>();
@@ -131,27 +140,15 @@ public class FragmentGraph extends Fragment
         //pieChart.setEntryLabelTextSize(20);
         //More options just check out the documentation!
 
-        //Firebase related RecyclerView
-//        mRecyclerView = (RecyclerView) view.findViewById(R.id.expenses_recyclerview);
-//        mRecyclerView.setHasFixedSize(true); // increases performance
-//        //  RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), mExpense);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
-//        //mRecyclerView.setAdapter(recyclerAdapter);
-
-
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         userID = user.getUid();
-  //      mExpType = new ArrayList<>();
-  //      mExpAmount = new ArrayList<>();
 
 
-
-//  This shows ALL Database references loaded during testing - replacing with Specific User location
-//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
-
+        //  This shows ALL Database references loaded during testing
         //Adding User specific database location:
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/" + userID + "/"); // mDatabaseRef
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/" + userID + "/");
+        //Value Event Listener
         mDatabaseRef.addValueEventListener(new ValueEventListener()
         {
             /**
@@ -176,12 +173,18 @@ public class FragmentGraph extends Fragment
                 for(DataSnapshot postSnapshot: dataSnapshot.getChildren())
                 {
 
+
+//                    Map<String, Float> map = new HashMap<String, Float>();
+//
+//                    float amount = map.get("expAmount");
+                   // String type = map.get("expenseType");
+                    //------------------------------------------------
                     String exptype = postSnapshot.child("expenseType").getValue(String.class);
                     //String expAmt = postSnapshot.child("expAmount").getValue(String.class);
                     float expAmt = postSnapshot.child("expAmount").getValue(Float.TYPE);
                     expenType.add(exptype);
                     expenAmount.add(expAmt);
-
+                    //-----------------------------------------
                     Log.d(TAG, "Expense Type: " + exptype);
                     Log.d(TAG, "Expense Amount: " + expAmt);
 
@@ -195,6 +198,9 @@ public class FragmentGraph extends Fragment
 //END OF WORKING
 
                 }
+
+
+
                // int len = expenAmount.size();
                 //Populate float Array for use in Graph - MPANDROIDCHART REQUIRES float[] to populate data
                 floatArray = new float[expenAmount.size()];
@@ -202,11 +208,52 @@ public class FragmentGraph extends Fragment
                     floatArray[i] = expenAmount.get(i);
                 }
 
+
                 //Populate float Array for use in Graph - MPANDROIDCHART REQUIRES float[] to populate data
                 stringArray = new String[expenType.size()];
                 for(int i = 0; i < expenType.size(); i++) {
                     stringArray[i] = expenType.get(i);
                 }
+
+                // Summation - See Method and references below OnCreateView
+               int uniqueEntriesInStrArr =  diffValues(stringArray);
+
+                // initialise Arrays:
+                newStringArray = new String[uniqueEntriesInStrArr];
+                newFloatArray = new float[uniqueEntriesInStrArr];
+               // int uniquetypes = uniqueEntriesInStrArr;
+                float sumAccomodation = 0.00f;
+                float sumFlights = 0.00f;
+                float sumMeals = 0.00f;
+                float sumOther = 0.00f;
+                float sumTransport = 0.00f;
+                String accom = "Accomodation";
+                String fly = "Flights";
+                String food = "Meals";
+                String other = "Other";
+                String trans = "Transport";
+                // initialise Arrays:
+                newStringArray = new String[uniqueEntriesInStrArr];
+                newFloatArray = new float[uniqueEntriesInStrArr];
+                for (int i =0; i < stringArray.length; i++)
+                {
+                    if(stringArray[i].contains(accom)){
+                        sumAccomodation += floatArray[i];
+                    } else if(stringArray[i].contains(fly)){
+                        sumFlights += floatArray[i];
+                    } else if(stringArray[i].contains(food)){
+                        sumMeals += floatArray[i];
+                    } else if(stringArray[i].contains(other)){
+                        sumOther += floatArray[i];
+                    } else if(stringArray[i].contains(trans)){
+                        sumTransport += floatArray[i];
+                    }
+                    Log.d(TAG, "onCreateView - INSIDE METHOD check SUMMATION is working (1580) " + sumTransport);
+                }
+              newStringArray = new String[]{"Accomodation","Flights","Meals","Other","Transport"};
+               newFloatArray = new float[] {sumAccomodation, sumFlights, sumMeals, sumOther, sumTransport};
+               // floatArray2 = new float[expenAmount.size()];
+
                 //Can access ArrayList here
                 Log.d(TAG, "onCreateView - expenseType Length " + expenType.size());
                 Log.d(TAG, "onCreateView - expenseAmount Length " + expenAmount.size());
@@ -214,8 +261,11 @@ public class FragmentGraph extends Fragment
                 Log.d(TAG, "onCreateView - floatArray Length " + floatArray.length);
                 Log.d(TAG, "onCreateView - String Array Length " + stringArray.length);
                 //Testing that floatArray[] & strainArray[] populated
-                Log.d(TAG, "onCreateView - float Array position [2] " + floatArray[2]);
-                Log.d(TAG, "onCreateView - String Array position [2] " + stringArray[2]);
+                Log.d(TAG, "onCreateView - float Array position [2] " + newFloatArray[1]);
+                Log.d(TAG, "onCreateView - String Array position [2] " + newStringArray[1]);
+                Log.d(TAG, "Checking length of uniqueEntriesInStrArr after using method 'diffValues' " + uniqueEntriesInStrArr);
+                Log.d(TAG, "onCreateView - check SUMMATION is working (1580) " + sumTransport);
+              //  Log.d(TAG, "onCreateView - String Array position [2] " + newStringArray[1]);
 /**
  * This method is a work around as I discovered Real Time data is not supported by
  * MPAndroidChart
@@ -223,17 +273,26 @@ public class FragmentGraph extends Fragment
  * Method data addDataSet() - from hardcoded Data added here.
  */
                 Log.d(TAG, "addDataSet started");
+
+                //FLOAT DATA - Populating values of PIE CHART,
                 ArrayList<PieEntry> yEntrys = new ArrayList<>();
-                ArrayList<String> xEntrys = new ArrayList<>();
-
-                for (int i = 0; i < floatArray.length; i++)
+                for (int i = 0; i < newFloatArray.length; i++)
                 {
-                    yEntrys.add(new PieEntry(floatArray[i], i));
+                    if(newFloatArray.length <=1) {
+                        Toast.makeText(getActivity(), "Load more data to view.", Toast.LENGTH_SHORT).show();
+                    }
+                    if(newFloatArray[i] != 0){
+                        yEntrys.add(new PieEntry(newFloatArray[i], i));
+                    }
+
                 }
-
-                for (int i = 1; i < stringArray.length; i++)
+                //STRING DATA - Populating text values of PIE CHART,
+                ArrayList<String> xEntrys = new ArrayList<>();
+                for (int i = 1; i < newStringArray.length; i++)
                 {
-                    xEntrys.add(stringArray[i]);
+                    if(newFloatArray[i] != 0){
+                        xEntrys.add(newStringArray[i]);
+                    }
                 }
 
                 //create the data set in piechart
@@ -269,46 +328,13 @@ public class FragmentGraph extends Fragment
         //This section runs before above ArrayList is populated.
 //        Log.d(TAG, "onCreateView - expenseType Length " + expenseType.size()+10);
 //        Log.d(TAG, "onCreateView - expenseAmount Length " + expenseAmount.size()+10);
-
-
 //        Log.d(TAG, "onCreateView - expenseType Length " + expenType.size());
 //        Log.d(TAG, "onCreateView - expenseAmount Length " + expenAmount.size());
 
-//        addDataSet();
 
-//        // Method data addDataSet() - from hardcoded Data added here.
-//        Log.d(TAG, "addDataSet started");
-//        ArrayList<PieEntry> yEntrys = new ArrayList<>();
-//        ArrayList<String> xEntrys = new ArrayList<>();
-//
-//        for (int i = 0; i < floatArray.length; i++)
-//        {
-//            yEntrys.add(new PieEntry(floatArray[i], i));
-//        }
-//
-//        for (int i = 1; i < stringArray.length; i++)
-//        {
-//            xEntrys.add(stringArray[i]);
-//        }
-//
-//        //create the data set in piechart
-//        PieDataSet pieDataSet = new PieDataSet(yEntrys, "Legend");
-//        pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS); //add colors to dataset
-//        pieDataSet.setSliceSpace(2);
-//        pieDataSet.setValueTextSize(16);
-//
-//        //add legend to chart
-//        Legend legend = pieChart.getLegend();
-//        legend.setForm(Legend.LegendForm.CIRCLE);
-//        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
-//        legend.setTextSize(16);
-//
-//        //create pie data object
-//        PieData pieData = new PieData(pieDataSet);
-//        pieChart.setData(pieData);
-//        pieChart.animateY(1500); //animates the Y axis
-//        pieChart.invalidate();
 
+        // This part of the code, allows user to click on PIE CHART
+        // And return the String  + TOTAL Amount
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener()
         {
             @Override
@@ -321,15 +347,15 @@ public class FragmentGraph extends Fragment
                 int pos1 = e.toString().indexOf("(sum): ");
                 String expenseCost = e.toString().substring(pos1 + 7);
 
-                for (int i = 0; i < floatArray.length; i++)
+                for (int i = 0; i < newFloatArray.length; i++)
                 {
-                    if (floatArray[i] == Float.parseFloat(expenseCost))
+                    if (newFloatArray[i] == Float.parseFloat(expenseCost))
                     {
                         pos1 = i;
                         break;
                     }
                 }
-                String expenseType = stringArray[pos1];
+                String expenseType = newStringArray[pos1];
                 Toast.makeText(getActivity(), "Expense Type: " + expenseType + "\n" +
                                                     "Total: €" + expenseCost,
                                                     Toast.LENGTH_LONG).show();
@@ -343,6 +369,38 @@ public class FragmentGraph extends Fragment
         });
         return view;
 
+    }
+
+    /**
+     * Modified from source which used int[],
+     * Using the below to count the number of unique entries in String Array
+     * Reference:  https://stackoverflow.com/questions/32444193/
+     * count-different-values-in-array-in-java
+     * Date: 08/04/2018
+     * @param numArray
+     * @return
+     */
+    public static int diffValues(String[] numArray){
+        int numOfDifferentVals = 0;
+
+        ArrayList<String> diffNum = new ArrayList<>();
+
+        for(int i=0; i<numArray.length; i++){
+            if(!diffNum.contains(numArray[i])){
+                diffNum.add(numArray[i]);
+            }
+        }
+        //modified this part as it may have been incorrect,
+        // Original Method was not providing the true int length of the Array
+        // containing unique values
+        if(diffNum.size()==0){
+            numOfDifferentVals = 0;
+        }
+        else{
+            numOfDifferentVals = diffNum.size()+1;
+        }
+
+        return numOfDifferentVals;
     }
 
     // I may want to combine some of the below code in the OnCreateView method as a fix
