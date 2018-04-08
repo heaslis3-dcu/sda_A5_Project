@@ -20,12 +20,15 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +48,19 @@ public class FragmentGraph extends Fragment
      */
 //    String str = "20.05";
 //    float fl = Float.parseFloat(str.toString());
-    private float[] yData = {200.5f, 150.99f, 35.5f, 28.02f, 129.58f, 86.78f, 65.50f, 98.99f};
-    private String[] xData = {"Flights", "Accomodation", "Beverages", "Food", "Client",
-            "Other", "Ground Transport", "Entertainment"};
+   // private List<String> expenType = new ArrayList<String>();
+    // private List<Float> expenAmount = new ArrayList<Float>();
+    private List<String> expenType;
+    private List<Float> expenAmount;
+    //NB - Check if this will help to populate the data:
+//  https://stackoverflow.com/questions/4837568/java-convert-arraylistfloat-to-float
+
+    private float[] floatArray;
+ //   private float[] yData = {200.5f, 150.99f, 35.5f, 28.02f, 129.58f, 86.78f, 65.50f, 98.99f, 300f};
+
+    private String[] stringArray;
+//    private String[] xData = {"Flights", "Accomodation", "Beverages", "Food", "Client",
+//            "Other", "Ground Transport", "Entertainment", "Taxi"};
     PieChart pieChart;
     String TAG = "Assign5";
     //private
@@ -55,7 +68,33 @@ public class FragmentGraph extends Fragment
     private RecyclerViewAdapter mAdapter;
 
     private DatabaseReference mDatabaseRef;
-    private List<Expense> mExpense;
+    private List<Expense> mExpType;
+    private List<Expense> mExpAmount;
+
+//    String[] amounts;
+//    String[] expenseTypes;
+
+//    private DatabaseReference mDatabaseRef; //mDatabaseRef
+   // private List<Expense> mExpense;
+    private String userID; //userID
+    private FirebaseAuth mAuth; //firebaseAuth
+
+    //Array lists
+//    private List<String[]> expenseType = new ArrayList<String[]>();
+//    private List<String[]> expenseAmount = new ArrayList<String[]>();
+
+    //Testing FLOAT
+  //  private float[] floatExpAmount = {};
+  //  private String[] floatExpType = {};
+
+    //+++++++++++++++++++++++++++++++++++++++//
+    //Turned off to test floats
+    //private List<String> expenseType = new ArrayList<String>();
+   // private List<float> expenseAmount = new ArrayList<float>();
+    //+++++++++++++++++++++++++++++++++++++++//
+
+//    final List<String> expenseType = new ArrayList<String>();
+//    final List<String> expenseAmount = new ArrayList<String>();
 
     //private RecyclerView myRecyclerView;
     //   private List<Expenses> listExpenses;
@@ -98,7 +137,177 @@ public class FragmentGraph extends Fragment
 //        //  RecyclerViewAdapter recyclerAdapter = new RecyclerViewAdapter(getContext(), mExpense);
 //        mRecyclerView.setLayoutManager(new LinearLayoutManager((getActivity())));
 //        //mRecyclerView.setAdapter(recyclerAdapter);
-        addDataSet();
+
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        userID = user.getUid();
+  //      mExpType = new ArrayList<>();
+  //      mExpAmount = new ArrayList<>();
+
+
+
+//  This shows ALL Database references loaded during testing - replacing with Specific User location
+//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
+
+        //Adding User specific database location:
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/" + userID + "/"); // mDatabaseRef
+        mDatabaseRef.addValueEventListener(new ValueEventListener()
+        {
+            /**
+             * Map modified from example in Fragment Expenses,
+             * And using below, in addition to some trial and error testing
+             * Reference - https://stackoverflow.com/questions/37688031/
+             * class-java-util-map-has-generic-type-parameters-please-use-generictypeindicator
+             * @param dataSnapshot
+             */
+            //@Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                // Get Data from Database for Expense type and Amount
+                // returning Name and Amount in Log testing :D
+                //https://stackoverflow.com/questions/38492827/how-to-get-a-string-list-from-firebase-to-fill-a-spinner
+                //Turned off to test FLOAT
+//                final List<String> expenseType = new ArrayList<String>();
+//                final List<String> expenseAmount = new ArrayList<String>();
+                expenType = new ArrayList<String>();
+                expenAmount = new ArrayList<Float>();
+
+                for(DataSnapshot postSnapshot: dataSnapshot.getChildren())
+                {
+
+                    String exptype = postSnapshot.child("expenseType").getValue(String.class);
+                    //String expAmt = postSnapshot.child("expAmount").getValue(String.class);
+                    float expAmt = postSnapshot.child("expAmount").getValue(Float.TYPE);
+                    expenType.add(exptype);
+                    expenAmount.add(expAmt);
+
+                    Log.d(TAG, "Expense Type: " + exptype);
+                    Log.d(TAG, "Expense Amount: " + expAmt);
+
+                    //https://stackoverflow.com/questions/46898/how-to-efficiently-iterate-over-each-entry-in-a-map
+//WORKING PART
+//                    Map<String, String> map = (Map) postSnapshot.getValue();
+//                    String type = map.get("expenseType");
+//                    String amount = map.get("expAmount");
+//                    Log.d(TAG, "Expense Name: " + type);
+//                    Log.d(TAG, "Expense Amount: " + amount);
+//END OF WORKING
+
+                }
+               // int len = expenAmount.size();
+                //Populate float Array for use in Graph - MPANDROIDCHART REQUIRES float[] to populate data
+                floatArray = new float[expenAmount.size()];
+                for(int i = 0; i < expenAmount.size(); i++) {
+                    floatArray[i] = expenAmount.get(i);
+                }
+
+                //Populate float Array for use in Graph - MPANDROIDCHART REQUIRES float[] to populate data
+                stringArray = new String[expenType.size()];
+                for(int i = 0; i < expenType.size(); i++) {
+                    stringArray[i] = expenType.get(i);
+                }
+                //Can access ArrayList here
+                Log.d(TAG, "onCreateView - expenseType Length " + expenType.size());
+                Log.d(TAG, "onCreateView - expenseAmount Length " + expenAmount.size());
+                //Testing length of floatArray[] & strainArray[] matches length of ListArray
+                Log.d(TAG, "onCreateView - floatArray Length " + floatArray.length);
+                Log.d(TAG, "onCreateView - String Array Length " + stringArray.length);
+                //Testing that floatArray[] & strainArray[] populated
+                Log.d(TAG, "onCreateView - float Array position [2] " + floatArray[2]);
+                Log.d(TAG, "onCreateView - String Array position [2] " + stringArray[2]);
+/**
+ * This method is a work around as I discovered Real Time data is not supported by
+ * MPAndroidChart
+ * See notes: https://github.com/PhilJay/MPAndroidChart/wiki/Dynamic-&-Realtime-Data
+ * Method data addDataSet() - from hardcoded Data added here.
+ */
+                Log.d(TAG, "addDataSet started");
+                ArrayList<PieEntry> yEntrys = new ArrayList<>();
+                ArrayList<String> xEntrys = new ArrayList<>();
+
+                for (int i = 0; i < floatArray.length; i++)
+                {
+                    yEntrys.add(new PieEntry(floatArray[i], i));
+                }
+
+                for (int i = 1; i < stringArray.length; i++)
+                {
+                    xEntrys.add(stringArray[i]);
+                }
+
+                //create the data set in piechart
+                PieDataSet pieDataSet = new PieDataSet(yEntrys, "Legend");
+                pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS); //add colors to dataset
+                pieDataSet.setSliceSpace(2);
+                pieDataSet.setValueTextSize(16);
+
+                //add legend to chart
+                Legend legend = pieChart.getLegend();
+                legend.setForm(Legend.LegendForm.CIRCLE);
+                legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+                legend.setTextSize(16);
+
+                //create pie data object
+                PieData pieData = new PieData(pieDataSet);
+                pieChart.setData(pieData);
+                pieChart.animateY(1500); //animates the Y axis
+                pieChart.invalidate();
+           }
+
+
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        //Test - cannot access Arraylist here
+        //This section runs before above ArrayList is populated.
+//        Log.d(TAG, "onCreateView - expenseType Length " + expenseType.size()+10);
+//        Log.d(TAG, "onCreateView - expenseAmount Length " + expenseAmount.size()+10);
+
+
+//        Log.d(TAG, "onCreateView - expenseType Length " + expenType.size());
+//        Log.d(TAG, "onCreateView - expenseAmount Length " + expenAmount.size());
+
+//        addDataSet();
+
+//        // Method data addDataSet() - from hardcoded Data added here.
+//        Log.d(TAG, "addDataSet started");
+//        ArrayList<PieEntry> yEntrys = new ArrayList<>();
+//        ArrayList<String> xEntrys = new ArrayList<>();
+//
+//        for (int i = 0; i < floatArray.length; i++)
+//        {
+//            yEntrys.add(new PieEntry(floatArray[i], i));
+//        }
+//
+//        for (int i = 1; i < stringArray.length; i++)
+//        {
+//            xEntrys.add(stringArray[i]);
+//        }
+//
+//        //create the data set in piechart
+//        PieDataSet pieDataSet = new PieDataSet(yEntrys, "Legend");
+//        pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS); //add colors to dataset
+//        pieDataSet.setSliceSpace(2);
+//        pieDataSet.setValueTextSize(16);
+//
+//        //add legend to chart
+//        Legend legend = pieChart.getLegend();
+//        legend.setForm(Legend.LegendForm.CIRCLE);
+//        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+//        legend.setTextSize(16);
+//
+//        //create pie data object
+//        PieData pieData = new PieData(pieDataSet);
+//        pieChart.setData(pieData);
+//        pieChart.animateY(1500); //animates the Y axis
+//        pieChart.invalidate();
 
         pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener()
         {
@@ -112,15 +321,15 @@ public class FragmentGraph extends Fragment
                 int pos1 = e.toString().indexOf("(sum): ");
                 String expenseCost = e.toString().substring(pos1 + 7);
 
-                for (int i = 0; i < yData.length; i++)
+                for (int i = 0; i < floatArray.length; i++)
                 {
-                    if (yData[i] == Float.parseFloat(expenseCost))
+                    if (floatArray[i] == Float.parseFloat(expenseCost))
                     {
                         pos1 = i;
                         break;
                     }
                 }
-                String expenseType = xData[pos1];
+                String expenseType = stringArray[pos1];
                 Toast.makeText(getActivity(), "Expense Type: " + expenseType + "\n" +
                                                     "Total: €" + expenseCost,
                                                     Toast.LENGTH_LONG).show();
@@ -136,89 +345,163 @@ public class FragmentGraph extends Fragment
 
     }
 
-    private void addDataSet()
-    {
-        Log.d(TAG, "addDataSet started");
-        ArrayList<PieEntry> yEntrys = new ArrayList<>();
-        ArrayList<String> xEntrys = new ArrayList<>();
+    // I may want to combine some of the below code in the OnCreateView method as a fix
 
-        for (int i = 0; i < yData.length; i++)
-        {
-            yEntrys.add(new PieEntry(yData[i], i));
-        }
 
-        for (int i = 1; i < xData.length; i++)
-        {
-            xEntrys.add(xData[i]);
-        }
-
-        //create the data set in piechart
-        PieDataSet pieDataSet = new PieDataSet(yEntrys, "Legend");
-        pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS); //add colors to dataset
-        pieDataSet.setSliceSpace(2);
-        pieDataSet.setValueTextSize(16);
-
-        //add legend to chart
-        Legend legend = pieChart.getLegend();
-        legend.setForm(Legend.LegendForm.CIRCLE);
-        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
-        legend.setTextSize(16);
-
-        //create pie data object
-        PieData pieData = new PieData(pieDataSet);
-        pieChart.setData(pieData);
-        pieChart.animateY(1500); //animates the Y axis
-        pieChart.invalidate();
-    }
+//    private void addDataSet()
+//    {
+//        Log.d(TAG, "addDataSet started");
+//        ArrayList<PieEntry> yEntrys = new ArrayList<>();
+//        ArrayList<String> xEntrys = new ArrayList<>();
+//
+//        for (int i = 0; i < floatArray.length; i++)
+//        {
+//            yEntrys.add(new PieEntry(floatArray[i], i));
+//        }
+//
+//        for (int i = 1; i < stringArray.length; i++)
+//        {
+//            xEntrys.add(stringArray[i]);
+//        }
+//
+//        //create the data set in piechart
+//        PieDataSet pieDataSet = new PieDataSet(yEntrys, "Legend");
+//        pieDataSet.setColors(ColorTemplate.VORDIPLOM_COLORS); //add colors to dataset
+//        pieDataSet.setSliceSpace(2);
+//        pieDataSet.setValueTextSize(16);
+//
+//        //add legend to chart
+//        Legend legend = pieChart.getLegend();
+//        legend.setForm(Legend.LegendForm.CIRCLE);
+//        legend.setPosition(Legend.LegendPosition.LEFT_OF_CHART);
+//        legend.setTextSize(16);
+//
+//        //create pie data object
+//        PieData pieData = new PieData(pieDataSet);
+//        pieChart.setData(pieData);
+//        pieChart.animateY(1500); //animates the Y axis
+//        pieChart.invalidate();
+//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+//            addDataSet();
+
+
+
+
+
+        //Test - cannot access Arraylist here
+        //This section runs before above ArrayList is populated.
+//        Log.d(TAG, "onCreateView - expenseType Length " + expenseType.size()+10);
+//        Log.d(TAG, "onCreateView - expenseAmount Length " + expenseAmount.size()+10);
+
+
+
+
+
+
         // Note - if time consider adding a loading/progress element
 
-        mExpense = new ArrayList<>();
-//  This shows ALL Database references loaded during testing - replacing with Specific User location
-//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
+//
+//
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser user = mAuth.getCurrentUser();
+//        userID = user.getUid();
+//        mExpense = new ArrayList<>();
+////  This shows ALL Database references loaded during testing - replacing with Specific User location
+////        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses"); // mDatabaseRef
+//
+//        //Adding User specific database location:
+//        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/" + userID + "/"); // mDatabaseRef
+//        mDatabaseRef.addValueEventListener(new ValueEventListener()
+//        {
+//            /**
+//             * Map modified from example in Fragment Expenses,
+//             * And using below, in addition to some trial and error testing
+//             * Reference - https://stackoverflow.com/questions/37688031/
+//             * class-java-util-map-has-generic-type-parameters-please-use-generictypeindicator
+//             * @param dataSnapshot
+//             */
+//           //@Override
+//            public void onDataChange(DataSnapshot dataSnapshot)
+//            {
+//                // Get Data from Database for Expense type and Amount
+//                // returning Name and Amount in Log testing :D
+//
+//                //https://stackoverflow.com/questions/38492827/how-to-get-a-string-list-from-firebase-to-fill-a-spinner
+//                final List<String> expenseType = new ArrayList<String>();
+//                final List<String> expenseAmount = new ArrayList<String>();
+////                    String[] expenseType;
+////                    String[] expenseAmount;
+//                for(DataSnapshot postSnapshot: dataSnapshot.getChildren())
+//                {
+//
+//                    String exptype = postSnapshot.child("expenseType").getValue(String.class);
+//                    String expAmt = postSnapshot.child("expAmount").getValue(String.class);
+//                    expenseType.add(exptype);
+//                    expenseAmount.add(expAmt);
+//
+//                    Log.d(TAG, "Expense Type: " + exptype);
+//                    Log.d(TAG, "Expense Amount: " + expAmt);
+//                    //https://stackoverflow.com/questions/46898/how-to-efficiently-iterate-over-each-entry-in-a-map
+////WORKING PART
+////                    Map<String, String> map = (Map) postSnapshot.getValue();
+////                    String type = map.get("expenseType");
+////                    String amount = map.get("expAmount");
+////                    Log.d(TAG, "Expense Name: " + type);
+////                    Log.d(TAG, "Expense Amount: " + amount);
+////END OF WORKING
+//                   // Map<String, String> map = (Map) postSnapshot.getValue();
+//                    //double x = Double.parseDouble(map.get("expAmount").toString());
+//
+//                    //Remove comma from String
+////                    if(amount.contains(","))
+////                    {
+////                        amount.replace(",", "");
+////                    }
+////                    double dAmount = Double.parseDouble(amount.toString());
+//
+////                    for(Map.Entry<String, String> entry : map.entrySet()) {
+////                        amounts = entry.getValue();
+////                    }
+////                    String[] results = map.values().toArray(new String[0]);
+////                    Log.d(TAG, "String Array: " + results);
+//
+////                    Log.d(TAG, "Double Amount: " + dAmount);
+//                }
+//            }
+//
+//
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError)
+//            {
+//                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
-        //Adding User specific database location:
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/"); // mDatabaseRef
-        mDatabaseRef.addValueEventListener(new ValueEventListener()
-        {
-            /**
-             * Map modified from example in Fragment Expenses,
-             * And using below, in addition to some trial and error testing
-             * Reference - https://stackoverflow.com/questions/37688031/
-             * class-java-util-map-has-generic-type-parameters-please-use-generictypeindicator
-             * @param dataSnapshot
-             */
-           //@Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                // Get Data from Database for Expense type and Amount
-                // returning Name and Amount in Log testing :D
 
-                for(DataSnapshot postSnapshot: dataSnapshot.getChildren())
-                {
-                    Map<String, String> map = (Map) postSnapshot.getValue();
-
-                    String amount = map.get("expAmount");
-                    String type = map.get("expenseType");
-                    Log.d(TAG, "Expense Name: " + type);
-                    Log.d(TAG, "Expense Amount: " + amount);
-                }
-            }
-
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError)
-            {
-                Toast.makeText(getActivity(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
     }
+
+
+
+    ///////////////////////////////////////////////////////
+
+//    public static String trimCommaOfString(String string) {
+////        String returnString;
+//        if(string.contains(",")){
+//            return string.replace(",","");}
+//        else {
+//            return string;
+//        }
+//
+//    }
+
 /*
     private void setupPieChart()
     {

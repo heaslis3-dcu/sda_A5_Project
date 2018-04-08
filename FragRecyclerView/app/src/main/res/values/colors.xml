@@ -5,7 +5,7 @@
     <!--<color name="colorAccent">#FF4081</color>-->
     <color name="colorPrimary">#c0ff8c</color>
     <color name="colorPrimaryDark">#c0ff8c</color>
-    <color name="colorAccent">#DCEDC8</color>
+    <color name="colorAccent">#b66aa0</color>
     <!-- Background Colors
     Complimentary colors from:
     Reference: http://www.color-hex.com/color/dcedc8
@@ -21,6 +21,10 @@
     <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>
     <color name="formbackground">#FFFFFF</color>
+
+    <!-- TextLabel-->
+    <color name="colorControlNormal">#bfacb9</color>
+    <color name="colorControlActivated">#b66aa0</color>
     <!--<color name="backgroundWhite">#FFFFFF</color>-->
 
     <color name="border">#00FFFFFF</color>

@@ -74,6 +74,8 @@
             android:layout_alignParentEnd="true"
             android:background="@drawable/border"
             android:cursorVisible="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:textCursorDrawable="@color/divider"
             android:hint="Enter Amount"
             android:inputType="numberDecimal"
@@ -108,27 +110,36 @@
         https://stackoverflow.com/questions/3013791/live-character-count-for-edittext
         Date: 31/03/2018
         -->
-        <TextView
-            android:id="@+id/expDesc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Expense Description"
-            android:textSize="12sp"
-            android:padding="8dp"
-            android:layout_below="@+id/expense_spinner"/>
+        <!--<TextView-->
+            <!--android:id="@+id/expDesc"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Expense Description"-->
+            <!--android:textSize="12sp"-->
+            <!--android:padding="8dp"-->
+            <!--android:layout_below="@+id/expense_spinner"/>-->
+<!--Text Input Used to show hint above Description
 
+        May remove as it probably looks better above a EditText which is
+        Same color as the background -->
         <android.support.design.widget.TextInputLayout
             android:id="@+id/text_edtx1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:counterEnabled="true"
             app:counterMaxLength="200"
-            android:layout_below="@+id/expDesc">
+            android:layout_below="@+id/expense_spinner"
 
-            <EditText
+            android:layout_marginTop="10dp">
+
+            <android.support.design.widget.TextInputEditText
                 android:id="@+id/text_edtx"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:hint="Enter Description Here"
+                android:textSize="20sp"
+                android:textColorHint="@color/colorControlActivated"
+                android:textColor="@color/colorControlActivated"
 
                 android:paddingBottom="8dp"
                 android:paddingLeft="8dp"
@@ -162,7 +173,7 @@
             android:text="Clear"
 
             android:layout_below="@+id/text_edtx1"
-            
+
             android:layout_alignParentLeft="true"
             android:background="@drawable/border"/>
 

@@ -3,11 +3,15 @@ package id_16109759_hdsd.sda_a5_seanheaslip;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.StringTokenizer;
 
 /**
+ * Amended on 08/04/2018 to include TextView,
+ * After getting Float to load to database and to the Expenses/Graphs output,
+ * I wanted to format the Textview after the float was posted to the database.
  * How to Automatically add thousand separators as number is input in EditText
  * Reference: - FULL CLASS OBTAINED HERE:
  * https://stackoverflow.com/questions/12338445/
@@ -19,6 +23,7 @@ public class NumberTextWatcherForThousand implements TextWatcher
 {
     private DecimalFormat df;
     private EditText editText;
+    private TextView textView; // Created by Sean Heaslip - to format
     private static String thousandSeparator;
     private static String decimalMarker;
     private int cursorPosition;

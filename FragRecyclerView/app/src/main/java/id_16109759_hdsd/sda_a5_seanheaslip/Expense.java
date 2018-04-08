@@ -15,7 +15,7 @@ public class Expense
     private String ExpDescription;
     private String Date;
     //private double ExpAmount;
-    private String ExpAmount;
+    private float ExpAmount;
     private String Photo;
 //    private Uri Photo;
 
@@ -26,7 +26,7 @@ public class Expense
 
 
     //    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, Uri photo)
-    public Expense(String id, String email, String expenseType, String expAmount, String expDescription, String date, String photo)
+    public Expense(String id, String email, String expenseType, float expAmount, String expDescription, String date, String photo)
     {
         Id = id;
         Email = email;
@@ -82,12 +82,12 @@ public class Expense
 //    }
     // Amount Saved as String - this is because when using a Map or ArrayList linked to Firebase we declare the type
     // ie.e Map <String, String> map.....
-    public String getExpAmount()
+    public float getExpAmount()
     {
         return ExpAmount;
     }
 
-    public void setExpAmount(String expAmount)
+    public void setExpAmount(float expAmount)
     {
         ExpAmount = expAmount;
     }
