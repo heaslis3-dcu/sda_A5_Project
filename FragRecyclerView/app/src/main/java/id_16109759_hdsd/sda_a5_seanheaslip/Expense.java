@@ -23,7 +23,9 @@ public class Expense
 
     }
 
-    //    public Expense(String name, String expenseType, double expAmount, String expDescription, String date, Uri photo)
+    // Constructor
+    // public Expense(String name, String expenseType, String expAmount,
+    // String expDescription, String date, Uri photo)
     public Expense(String id, String email, String expenseType, float expAmount,
                    String expDescription, String date, String photo)
     {

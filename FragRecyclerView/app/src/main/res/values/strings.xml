@@ -14,4 +14,15 @@
     <string name="plcHldrTxt_Spinner">expense name</string>
     <string name="plcHldr_Date">MM/DD/YYYY</string>
     <string name="plcHldr_ExpDesc">Expense Description:</string>
+    <string name="expense_description">Expense Description</string>
+    <string name="expense_type">Expense Type</string>
+    <string name="mm_dd_yyyy">MM/DD/YYYY</string>
+    <string name="amount">Amount</string>
+    <string name="enter_description_here">Enter Description Here</string>
+    <string name="submit">Submit</string>
+    <string name="clear">Clear</string>
+    <string name="expT">Expense Type</string>
+    <string name="enter_amountT">Enter Amount</string>
+    <string name="select_dateT">Select date</string>
+    <string name="select_imageT">Select Image</string>
 </resources>
