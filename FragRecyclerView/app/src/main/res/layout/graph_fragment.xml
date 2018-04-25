@@ -13,9 +13,9 @@
     <!--android:orientation="vertical"-->
 
     <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="Test Chart"/>-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:text="Test Chart"/>-->
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/idPieChart"

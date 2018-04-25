@@ -1,3 +1,21 @@
 <resources>
+
+    <!--Dimensions-->
+    <dimen name="imgV_width">250dp</dimen>
+    <dimen name="imgV_height">250dp</dimen>
+
+    <!--Padding-->
+    <dimen name="dialogPadding8">8dp</dimen>
+    <dimen name="dialogPadding10">10dp</dimen>
+    <!--Text-->
+    <dimen name="txtExpSize">24sp</dimen>
+    <dimen name="dialog_TxtSize">16sp</dimen>
+    <!--Margin-->
+    <dimen name="margBtm10">10dp</dimen>
+    <dimen name="margTop5">5dp</dimen>
+    <dimen name="margin12">12dp</dimen>
+    <dimen name="margin16">16dp</dimen>
+    <dimen name="linLayout_DialogMargTop">10dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="calendarMarginTop">16dp</dimen>
 </resources>

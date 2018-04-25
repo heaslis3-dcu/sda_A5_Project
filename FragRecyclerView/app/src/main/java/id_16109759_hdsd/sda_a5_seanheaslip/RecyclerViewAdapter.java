@@ -15,11 +15,9 @@ package id_16109759_hdsd.sda_a5_seanheaslip;
  limitations under the License.
  */
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-
-import java.text.Format;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,7 +40,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder>
 {
 
-   private Context mContext;
+    private Context mContext;
     private List<Expense> mData;
     private Dialog myDialog;
 
@@ -55,20 +50,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mData =mData;
     }
 
-//    public RecyclerViewAdapter(FragmentExpenses.OnItemSelectedInterface listener)
-//    {
-//    }
-
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, final int viewType)
     {
-      //  Activity activity;
-
-        //Retrieve display dimensions
-        //Rect displayRectangle = new Rect();
-       //Window window = mContext.getWindow();
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_expenses, parent, false);
-       // view.setMinimumWidth((int)(displayRectangle.width() * 0.9f));
         final viewHolder vHolder = new viewHolder(view);
 
 
@@ -96,7 +81,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 //Expense Type
                 dialog_title_tv.setText("Expense: " + mData.get(vHolder.getAdapterPosition()).getExpenseType()); // Expense Type
                 //ID
-                dialog_id.setText("Email: " + mData.get(vHolder.getAdapterPosition()).getName());
+                dialog_id.setText("Expense Amount: €" + mData.get(vHolder.getAdapterPosition()).getExpAmount());
                 //Date
                 dialog_date_tv.setText("Date: " + mData.get(vHolder.getAdapterPosition()).getDate());
                 //Description
@@ -109,11 +94,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         .centerCrop()
                         .rotate(90)
                         .into(dialog_item_img);
-               // dialog_item_img.setImageResource(mData.get(vHolder.getAdapterPosition()).getPhoto());
-               // dialog_item_img.setImageResource();
 
-                Toast.makeText(mContext, "Testing Clicked list item" +
-                        String.valueOf(vHolder.getAdapterPosition()),
+                Toast.makeText(mContext, "Item: " +
+                                String.valueOf(vHolder.getAdapterPosition()+1) + " clicked!",
                         Toast.LENGTH_SHORT).show();
                 myDialog.show();
 
@@ -143,7 +126,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.textView_date.setText(expenseCurrent.getDate());
         holder.textView_Amount.setText("€ " + expenseCurrent.getExpAmount());
 
-       // holder.img.setImageResource(expenseCurrent.getPhoto());
         // Using Picasso to handle image
         Picasso.with(mContext)
                 .load(expenseCurrent.getPhoto())

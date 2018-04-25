@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:background="@color/colorBackgroundExpense">
+    android:background="@color/colorBackgroundGraph">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,99 +19,88 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
                 <!-- https://www.youtube.com/watch?v=Zd0TUuoPP-s -->
                 <ImageView
                     android:id="@+id/dialog_img_expense_id"
-                    android:layout_width="250dp"
-                    android:layout_height="250dp"
-
+                    android:layout_width="@dimen/imgV_width"
+                    android:layout_height="@dimen/imgV_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:padding="10dp"
+                    android:padding="@dimen/dialogPadding10"
+                    android:layout_marginTop="@dimen/margin16"
                     android:src="@drawable/ic_directions_bike_black_24dp"
-                    />
+                    android:rotation="-90"
+                    android:background="@color/colorBackgroundExpense"/>
             </LinearLayout>
 
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin16"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
-
+                <!---->
                 <TextView
+                    style="@style/Dialog"
                     android:id="@+id/dialog_descrip_heading_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-
-                    android:text="Expense"
-                    android:textSize="24sp"
-                    android:textStyle="bold"/>
+                    android:text="@string/plcHldrTxt_Expense"
+                    android:textSize="@dimen/txtExpSize"/>
                 <!-- Add border around textView
                  https://stackoverflow.com/questions/3496269/
                  how-do-i-put-a-border-around-an-android-textview
                  -->
                 <TextView
+                    style="@style/Dialog"
                     android:id="@+id/dialog_expense_type_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignStart="@+id/dialog_img_expense_id"
                     android:layout_below="@+id/dialog_img_expense_id"
-
-                    android:minLines="1"
-                    android:padding="8dp"
-
-                    android:text="expense name"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    />
+                    android:text="@string/plcHldrTxt_Spinner"
+                    android:textStyle="normal"/>
 
                 <TextView
+                    style="@style/Dialog"
                     android:id="@+id/dialog_date_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minLines="1"
-                    android:padding="8dp"
-                    android:text="MM/DD/YYYY"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    />
+                    android:text="@string/plcHldr_Date"
+                    android:textStyle="normal"/>
                 <TextView
+                    style="@style/Dialog"
                     android:id="@+id/description_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:minLines="1"
-                    android:paddingLeft="8dp"
-                    android:paddingTop="8dp"
-                    android:text="Expense  Description:"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    />
+                    android:text="@string/plcHldr_ExpDesc"/>
 
                 <TextView
+
                     android:id="@+id/dialog_expense_description_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignStart="@+id/dialog_img_expense_id"
                     android:layout_below="@+id/dialog_img_expense_id"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="5dp"
-
-                    android:minLines="1"
-                    android:padding="8dp"
+                    android:padding="@dimen/dialogPadding8"
                     android:text="body text"
-                    android:textSize="16sp"/>
-
+                    android:textSize="@dimen/dialog_TxtSize"
+                    android:background="@color/colorBackgroundExpense"
+                    android:layout_marginLeft="@dimen/margin16"
+                    android:layout_marginRight="@dimen/margin16"
+                    android:layout_marginBottom="@dimen/margin16"/>
+                <!--android:layout_marginBottom="@dimen/margBtm10"-->
+                <!--android:layout_marginTop="@dimen/margTop5"-->
                 <!--<Button-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:text="Update Expense"/>-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:text="Update Expense"/>-->
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

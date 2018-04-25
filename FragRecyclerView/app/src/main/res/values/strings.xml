@@ -10,4 +10,8 @@
         <item>Transport</item>
     </string-array>
     <string name="title_activity_calendar_layout">calendar_layout</string>
+    <string name="plcHldrTxt_Expense">Expense</string>
+    <string name="plcHldrTxt_Spinner">expense name</string>
+    <string name="plcHldr_Date">MM/DD/YYYY</string>
+    <string name="plcHldr_ExpDesc">Expense Description:</string>
 </resources>

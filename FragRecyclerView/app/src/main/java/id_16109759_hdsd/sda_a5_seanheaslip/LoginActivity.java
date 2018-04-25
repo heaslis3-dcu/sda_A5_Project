@@ -35,7 +35,8 @@ public class LoginActivity extends AppCompatActivity
     //Login Page
     SignInButton button;
     private FirebaseAuth mAuth;
-    private final static int RC_SIGN_IN = 2;
+    private final int RC_SIGN_IN = 2;
+    //private final static int RC_SIGN_IN = 2;
     GoogleSignInClient mGoogleSignInClient;
     static private final String TAG = "Assign5";
     /**
@@ -128,9 +129,6 @@ public class LoginActivity extends AppCompatActivity
             } catch (ApiException e) {
                 Toast.makeText(LoginActivity.this, "Error: Google sign in failed",
                         Toast.LENGTH_LONG).show();
-                // Google Sign In failed, update UI appropriately
-                // Log.i(TAG, "Google sign in failed", e);
-                // ...
             }
         }
     }
@@ -147,17 +145,14 @@ public class LoginActivity extends AppCompatActivity
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            // updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Failed to authenticate user.",
                                     Toast.LENGTH_SHORT).show();
-                            // Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            //  updateUI(null);
+
                         }
-                        //Auth state listener
-                        // ...
+
                     }
                 });
     }

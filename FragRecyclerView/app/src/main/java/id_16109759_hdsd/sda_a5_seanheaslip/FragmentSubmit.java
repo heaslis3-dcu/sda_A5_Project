@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -122,24 +123,16 @@ public class FragmentSubmit extends Fragment
         Keyboard.hideSoftKeyBoardOnTabClicked(getContext());
 
         //Firebase Images
-        // firebaseStorage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("images/users/"); //mStorageRef
         //Firebase database References
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("expenses/users/"); // mDatabaseRef
-        //firebaseStorage = FirebaseStorage.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-
-        /*
-        storageReference = FirebaseStorage.getInstance().getReference("images/users/");
-        */
 
         //User ID
         // userID = firebaseAuth.getCurrentUser().getEmail();
         //Get Signed in User
         FirebaseUser user = firebaseAuth.getCurrentUser();
         userID = user.getUid();
-        //userID = firebaseAuth.getCurrentUser().getDisplayName();
-        //userID = FirebaseUser.getEmail();
 
         mDate = (EditText) view.findViewById(R.id.calendar_text);
         mAmount = (EditText) view.findViewById(R.id.amount_text);
@@ -151,13 +144,6 @@ public class FragmentSubmit extends Fragment
         mSubmitBtn = (Button) view.findViewById(R.id.submit_btn);
         // How to Automatically add thousand separators as number is input in EditText
         // For Reference: See Downloaded Class NumberTextWatcherForThousand
-        //Text Water for
-        //mSubmitBtn.setSelected(false);
-//        ToggleButton toggleButton = (ToggleButton)view.findViewById(R.id.clear_btn);
-//        toggleButton.setChecked(false);
-
-        //Testing Formatt
-        // mPlaceholder = mAmount;
 
         // FORMAT to Number in EditText - left out as ran out of time to resolve issue with
         // handling comma feeding into database
@@ -184,39 +170,37 @@ public class FragmentSubmit extends Fragment
                 //Load information to Database retrieve key from image uploaded:
                 String expDate = mDate.getText().toString().trim(); //Date as String
                 String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
-                //double expAmount = Double.parseDouble(mAmount.getText().toString());
-
-                // float expAmount = Float.parseFloat(mAmount.getText().toString());
                 String expType = mSpinner.getSelectedItem().toString(); // Expense
                 String expDesc = mDescription.getText().toString().trim(); //Description Saved
 
-
-                // String imageUri = taskSnapshot.getDownloadUrl().toString(); //ID of uploaded image
+                // Trying validate imagebutton after first image submitted
+                // mImageFilePath = filePath.getPath().toString();
+//                mImageFilePath = mCamera.toString();
+//                if(URLUtil.isValidUrl(mImageFilePath))
                 if (filePath == null)
                 {
+                    // Log.d(TAG,"Image = " + filePath);
                     Toast.makeText(getActivity(), "Image missing!", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(expDate))
                 {
-                    mDate.setError("Date required"); //Should place icon in EditText and display message
-                    //Toast.makeText(getActivity(), "Date required ", Toast.LENGTH_SHORT).show();
+                    // Removed setError as it displays after date is populated. //mDate.setError("Date required");
+                    Toast.makeText(getActivity(), "Date required ", Toast.LENGTH_SHORT).show();
                 }
-                // float
-//                else if (expAmount == 0.0f)
-//                {
-//                    Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
-//                }
+
                 //String
                 else if (TextUtils.isEmpty(expAmount))
                 {
-                    mAmount.setError("Amount required"); //Should place icon in EditText and display message
-                    //Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
+                    //Should place icon in EditText and display message
+                    //mAmount.setError("Amount required"); //Should place icon in EditText and display message
+                    Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
                 } else if (expType == mSpinner.getItemAtPosition(origSpinnerPos))
                 {
                     Toast.makeText(getActivity(), "Select expense type!", Toast.LENGTH_SHORT).show();
                 } else if (TextUtils.isEmpty(expDesc))
                 {
-                    mDescription.setError("A description is required!"); //Should place icon in EditText and display message
-                    //Toast.makeText(getActivity(), "Expense description required", Toast.LENGTH_SHORT).show();
+                    //Should place icon in EditText and display message
+                    //mDescription.setError("A description is required!"); //Should place icon in EditText and display message
+                    Toast.makeText(getActivity(), "Expense description required", Toast.LENGTH_SHORT).show();
                 } else
                 {
                     //check if an upload is currently running,
@@ -232,15 +216,6 @@ public class FragmentSubmit extends Fragment
                         //Toast.makeText(getActivity(), "Please attach an Image!", Toast.LENGTH_SHORT).show();
                     }
 
-//                (mUploadTask.isComplete())
-//                    //String cameraImg = "@drawable/ic_photo_camera_black_24dp";
-//                    mDate.setText("");
-//                    // mAmount.setText("");
-//                    mDescription.setText("");
-//                    mSpinner.setSelection(origSpinnerPos);
-//                    // mCamera.setImageURI(null);
-//                    ImageButton imageButton = (ImageButton) v.findViewById(R.id.camera_img);
-//                    // imageButton.setImageResource(R.drawable.ic_photo_camera_black_24dp); //change imagebutton
                 }
             }
         });
@@ -263,6 +238,8 @@ public class FragmentSubmit extends Fragment
                 // Self created method to Clear contents from Form,
                 // Also used when data is loaded to Firebase after Submit button pressed.
                 clearContent();
+                //@Override
+                //      onDestroy();
             }
         });
 
@@ -328,7 +305,10 @@ public class FragmentSubmit extends Fragment
         mSpinner.setSelection(origSpinnerPos);
         // mCamera.setImageURI(null);
         //ImageButton imageButton = (ImageButton) v.findViewById(R.id.camera_img);
-        mCamera.setImageResource(R.drawable.ic_photo_camera_black_24dp); //change imagebutton
+        mCamera.setImageResource(R.drawable.ic_photo_camera_black_24dp); //Sets the ImageButton to drawable
+        //Added 24/04/2018
+        // clears the filepath so that it returns null and validation can be applied
+        filePath = null;
     }
 
     /**
@@ -374,7 +354,6 @@ public class FragmentSubmit extends Fragment
             //This portion of code assigns the compressed Bitmap to the ImageView
             try
             {
-
                 //Adding compression: - Discovered @ 01:37am on 5th April 2018 - filepath above is being used
                 // To populate the image toFirebase and not the compressed Bitmap below.
                 //May need to replace this with Picasso.with(this).load(filepath).into(mCamera);
@@ -460,9 +439,6 @@ public class FragmentSubmit extends Fragment
                             //generate Unique ID from Firebase
                             String id = idExtention;
 
-                            //Users Email - unique therefore adding as an
-                            userID = firebaseAuth.getCurrentUser().getEmail();
-
                             // Updating expense Class
                             Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
                             //Pass Expense with id to the Database to avoid overwriting data in Database
@@ -476,6 +452,9 @@ public class FragmentSubmit extends Fragment
 
                             // Clear contents from Submit Form after data loaded to Firebase.
                             clearContent();
+
+                            // FragmentSubmit.super.onDestroy();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener()
@@ -615,49 +594,5 @@ public class FragmentSubmit extends Fragment
 //
 //}
 
-    //  Working addExpense code
-//    private void addExpense()
-//    {
-////        EditText mDate;
-////        EditText mAmount;
-////        EditText mDescription;
-////        Spinner mSpinner;
-//        String expDate = mDate.getText().toString().trim();
-//       // String expAmount = mAmount.getText().toString(); // Save amount as String due to structure of Data in Firebase
-//        // double expAmount = Double.parseDouble(mAmount.getText().toString());
-//        float expAmount = Float.parseFloat(mAmount.getText().toString());
-//        String expDesc = mDescription.getText().toString().trim();
-//        String expType = mSpinner.getSelectedItem().toString();
-//        String imageUri = m_ImageUri.toString().trim();
-//        //  Uri imageUri = m_ImageUri;
-//
-//        if (TextUtils.isEmpty(expDate))
-//        {
-//            Toast.makeText(getActivity(), "Date required", Toast.LENGTH_SHORT).show();
-////        } else if(expAmount == null) {
-////            Toast.makeText(getActivity(), "Amount required", Toast.LENGTH_SHORT).show();
-//        } else if (TextUtils.isEmpty(expDesc))
-//        {
-//            Toast.makeText(getActivity(), "Expense description required", Toast.LENGTH_SHORT).show();
-//        } else if (TextUtils.isEmpty(expType))
-//        {
-//            Toast.makeText(getActivity(), "Select expense type", Toast.LENGTH_SHORT).show();
-//        } else if (Uri.EMPTY.equals(imageUri))
-//        {
-//            Toast.makeText(getActivity(), "No Image", Toast.LENGTH_SHORT).show();
-//        } else
-//        {
-//
-//            //generate Unique ID from Firebase
-//            String id = mDatabaseRef.push().getKey();
-//            //Users Email - unique therefore adding as an
-//            userID = firebaseAuth.getCurrentUser().getEmail();
-//            // Updating expense Class
-//            Expense expense = new Expense(id, userID, expType, expAmount, expDesc, expDate, imageUri);
-//            //Pass Expense with id to the Database to avoid overwriting data in Database
-//            mDatabaseRef.child(id).setValue(expense);
-//            Toast.makeText(getActivity(), "Image Uri." + m_ImageUri, Toast.LENGTH_LONG).show();
-//            // Toast.makeText(getActivity(), "Image File Path." + mImageFilePath, Toast.LENGTH_LONG).show();
-//        }
-//    }
+
 }

@@ -31,15 +31,7 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_CODE = 1;
     FirebaseAuth.AuthStateListener mAuthListenera;
     GoogleSignInClient mGoogleSignInClient;
-//    FirebaseAuth.AuthStateListener mAuthListenera;
-//    FirebaseAuth mAuth;
-//
-//    //    @Override
-//    protected void onStart()
-//    {
-//        super.onStart();
-//        mAuth.addAuthStateListener(mAuthListenera);
-//    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,9 +55,9 @@ public class MainActivity extends AppCompatActivity
         // add Vector Asset to tabLayout remove text above,
         // for images to appear ONLY, or leave text above to include
         // both image and text.
-//        tabLayout.getTabAt(0).setIcon(R.drawable.);
-//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_call);
-//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_call);
+//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_....);
+//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_....);
+//        tabLayout.getTabAt(0).setIcon(R.drawable.ic_....);
 
         //Remove shadows from actionbar
         ActionBar actionBar = getSupportActionBar();
@@ -102,16 +94,16 @@ public class MainActivity extends AppCompatActivity
      * @param item
      * @return
      */
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_send:
-                signOut();
-                return true;
-        }
-        return false;
-    }
+//    public boolean onOptionsItemSelected(MenuItem item)
+//    {
+//        switch (item.getItemId())
+//        {
+//            case R.id.action_send:
+//                signOut();
+//                return true;
+//        }
+//        return false;
+//    }
 
     /**
      * Added permissions verification

@@ -13,7 +13,8 @@
         android:layout_height="50dp"
         android:layout_margin="8dp"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_directions_bike_black_24dp"/>
+        android:src="@drawable/ic_directions_bike_black_24dp"
+        android:rotation="-90"/>
 
     <!-- Weight affects the width allowed for text -->
     <LinearLayout
